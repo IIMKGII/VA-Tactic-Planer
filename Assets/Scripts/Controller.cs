@@ -18,7 +18,10 @@ public class Controller : MonoBehaviour
 
     [FormerlySerializedAs("imageSprites")] public Sprite[] normalMaps;
     public Sprite[] calloutMaps;
+
+    public Sprite[] players, arrows;
     
+    public Image playerImage, arrowImage;
     
     public GameObject[] draggableImages;
 
@@ -112,9 +115,22 @@ public class Controller : MonoBehaviour
             currentDraggableImage.transform.SetParent(FindObjectOfType<ImageEditor>().transform);
             Destroy(currentDraggableImage.GetComponent<Button>());
             currentDraggableImage.tag = "button";
-            currentDraggableImage.GetComponent<Image>().color = currentColor;
+            
             float scale = FindObjectOfType<ImageEditor>().canvasScale;
-            currentDraggableImage.gameObject.GetComponent<RectTransform>().sizeDelta = new Vector2(50 * scale, 50 * scale);
+            
+            
+            if (currentDraggableImage.name != "Player(Clone)")
+            {
+                currentDraggableImage.GetComponent<Image>().color = currentColor;
+                currentDraggableImage.gameObject.GetComponent<RectTransform>().sizeDelta = new Vector2(50 * scale, 50 * scale);
+            }
+            else
+            {
+                currentDraggableImage.gameObject.GetComponent<RectTransform>().sizeDelta = new Vector2(50 * scale, 50 * scale);
+                currentDraggableImage.gameObject.transform.GetChild(0).GetComponent<RectTransform>().sizeDelta = new Vector2(100 * scale, 100 * scale);
+                currentDraggableImage.transform.GetChild(0).gameObject.SetActive(false);
+            }
+            
         }
 
         isSelected = !foundSth;
@@ -124,36 +140,33 @@ public class Controller : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
-            currentColor = new Color(0.00392156862745098f, 0.42745098039215684f, 0.5019607843137255f);
+            colorSelector(0);
         }
         if (Input.GetKeyDown(KeyCode.Alpha2))
         {
-            currentColor = currentColor = new Color(0.5137254902f, 0.0745098039f, 0.6196078431f);
+            colorSelector(1);
         }
         if (Input.GetKeyDown(KeyCode.Alpha3))
         {
-            currentColor = new Color(0.0823529412f, 0.8078431373f, 0.8901960784f);
+            colorSelector(2);
         }
         if (Input.GetKeyDown(KeyCode.Alpha4))
         {
-            currentColor = new Color(0.6549019608f, 0.0470588235f, 0.2352941176f);
+            colorSelector(3);
         }
         if (Input.GetKeyDown(KeyCode.Alpha5))
         {
-            currentColor = new Color(0.0392156863f, 0.7019607843f, 0.3490196078f);
+            colorSelector(4);
         }
         if (Input.GetKeyDown(KeyCode.Alpha6))
         {
-            currentColor = new Color(0.9333333333f, 0.9294117647f, 0.2078431373f);
+            colorSelector(5);
         }
         if (Input.GetKeyDown(KeyCode.Alpha7))
         {
-            currentColor = Color.black;
-            currentColor.a = 0;
+            colorSelector(6);
         }
-        
         setupColors();
-        
         
         if (Input.GetKeyDown(KeyCode.Delete))
         {
@@ -176,7 +189,16 @@ public class Controller : MonoBehaviour
 
     public void rotateObject(float number)
     {
-        currentDraggableImage.transform.rotation = Quaternion.Euler(0, 0, number*360);
+        if (currentDraggableImage.name != "Player(Clone)")
+        {
+            currentDraggableImage.transform.rotation = Quaternion.Euler(0, 0, number*360);
+        }
+        else
+        {
+            currentDraggableImage.transform.GetChild(0).gameObject.SetActive(number != 0);
+            currentDraggableImage.transform.GetChild(0).rotation = Quaternion.Euler(0, 0, number*360);
+            
+        }
     }
 
 
@@ -203,8 +225,17 @@ public class Controller : MonoBehaviour
 
     public void colorSelector(int i)
     {
+        
+        if (i < 6)
+        {
+            arrowImage.sprite = arrows[i];
+            playerImage.sprite = players[i];
+        }
+        
         switch(i)
         {
+            
+            
             case 0:
                 currentColor = new Color(0.00392156862745098f, 0.42745098039215684f, 0.5019607843137255f);
 
@@ -254,7 +285,10 @@ public class Controller : MonoBehaviour
 
         foreach (var image in draggableImages)
         {
-            image.GetComponent<Button>().colors = colorBlock;
+            if (image.name != "Player")
+            {
+                image.GetComponent<Button>().colors = colorBlock;
+            }
         }
     }
 }
