@@ -196,7 +196,11 @@ public class ImageEditor : MonoBehaviour
             hideObject.SetActive(false);
         }
 
-        gameObject.GetComponent<RectTransform>().position = new Vector3(1372, 720, 0);
+        cam.targetTexture = new RenderTexture(transform.GetComponent<Image>().sprite.texture.width,
+            transform.GetComponent<Image>().sprite.texture.height, 24);
+        
+        // gameObject.GetComponent<RectTransform>().position = new Vector3(1372, 720, 0);
+        gameObject.GetComponent<RectTransform>().position = mainCanvas.gameObject.transform.position;
         gameObject.GetComponent<RectTransform>().localScale = new Vector3(1, 1, 1);
         
         mainCanvas.renderMode = RenderMode.ScreenSpaceCamera;
