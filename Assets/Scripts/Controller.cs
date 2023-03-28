@@ -37,6 +37,7 @@ public class Controller : MonoBehaviour
 
     void Start()
     {
+        changeThickness(0.2167675f);
         // Populate the dropdown options
         imageDropdown.ClearOptions();
         foreach (Sprite sprite in normalMaps)
@@ -167,7 +168,27 @@ public class Controller : MonoBehaviour
             colorSelector(6);
         }
         setupColors();
-        
+
+        if (Input.GetKeyDown(KeyCode.DownArrow))
+        {
+            Scrollbar scrollbar = FindObjectOfType<Scrollbar>();
+            if (scrollbar.value > 0)
+            {
+                changeThickness(FindObjectOfType<Scrollbar>().value - (1f / 11f));
+                FindObjectOfType<Scrollbar>().value -= (1f / 11f);
+            }
+        }
+
+        if (Input.GetKeyDown(KeyCode.UpArrow))
+        {
+            Scrollbar scrollbar = FindObjectOfType<Scrollbar>();
+            if (scrollbar.value is < 1)
+            {
+                changeThickness(FindObjectOfType<Scrollbar>().value + (1f / 11f));
+                FindObjectOfType<Scrollbar>().value += (1f / 11f);
+            }
+            
+        }
         if (Input.GetKeyDown(KeyCode.Delete))
         {
             Destroy(currentDraggableImage);
@@ -221,6 +242,11 @@ public class Controller : MonoBehaviour
     public bool getDrawingEnabled()
     {
         return drawingEnabled;
+    }
+
+    public void changeThickness(float thickness)
+    {
+        FindObjectOfType<ImageEditor>().setThickness((int) (thickness*20));
     }
 
     public void colorSelector(int i)

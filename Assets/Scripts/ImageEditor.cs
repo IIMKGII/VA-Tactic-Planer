@@ -23,11 +23,13 @@ public class ImageEditor : MonoBehaviour
     private Color[] colors;
     private Vector2 previousPosition;
     private bool isDrawing;
+    private int thickness;
 
 
 
     void Start()
     {
+
         canvasPosition = transform.localPosition;
         canvasScale = transform.localScale.x;
 
@@ -87,7 +89,7 @@ public class ImageEditor : MonoBehaviour
             }
             else
             {
-                DrawLine(x1, y1, x2, y2, currentColor, 8);
+                DrawLine(x1, y1, x2, y2, currentColor, thickness);
             }
             previousPosition = localPoint;
         }
@@ -122,6 +124,20 @@ public class ImageEditor : MonoBehaviour
     {
         LineRenderer lineRenderer = GetComponent<LineRenderer>();
         lineRenderer.positionCount = 0;
+    }
+
+    public void setThickness(int thickness)
+    {
+        if (thickness == 0)
+        {
+            thickness = 1;
+        }
+        this.thickness = thickness;
+    }
+
+    public int getThickness()
+    {
+        return thickness;
     }
 
     void DrawLine(int x1, int y1, int x2, int y2, Color color, int size)
