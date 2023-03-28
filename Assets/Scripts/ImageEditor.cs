@@ -189,7 +189,7 @@ public class ImageEditor : MonoBehaviour
         texture.Apply();
     }
 
-    private void saveScreenshot()
+    public void saveScreenshot()
     {
         foreach (var hideObject in hideScreenshotObjects)
         {

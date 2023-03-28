@@ -230,6 +230,7 @@ public class Controller : MonoBehaviour
     
     public void exportPDF()
     {
+        FindObjectOfType<ImageEditor>().saveScreenshot();
         isSelected = false;
     }
 
