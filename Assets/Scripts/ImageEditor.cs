@@ -1,9 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Security.Cryptography;
 using UnityEngine;
 using UnityEngine.UI;
+using iTextSharp.text;
+using iTextSharp.text.pdf;
+using Image = UnityEngine.UI.Image;
+using Color = UnityEngine.Color;
 
 
 public class ImageEditor : MonoBehaviour
@@ -220,6 +225,30 @@ public class ImageEditor : MonoBehaviour
         Destroy(Image);
 
         File.WriteAllBytes("Screenshot.png", Bytes);
+        
+        
+        
+        iTextSharp.text.Rectangle pageSize = null;
+ 
+        using (var srcImage = new Bitmap("Screenshot.png"))
+        {
+            pageSize = new iTextSharp.text.Rectangle(0, 0, srcImage.Width, srcImage.Height);
+        }
+
+        using (var ms = new MemoryStream())
+        {
+            var document = new iTextSharp.text.Document(pageSize, 0, 0, 0, 0);
+            iTextSharp.text.pdf.PdfWriter.GetInstance(document, ms).SetFullCompression();
+            document.Open();
+            var image = iTextSharp.text.Image.GetInstance("Screenshot.png");
+            document.Add(image);
+            document.Close();
+
+            File.WriteAllBytes("export.pdf", ms.ToArray());
+        }
+
+
+
         mainCanvas.renderMode = RenderMode.ScreenSpaceOverlay;
         counter = 0;
             
