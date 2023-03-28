@@ -218,7 +218,6 @@ public class Controller : MonoBehaviour
         {
             currentDraggableImage.transform.GetChild(0).gameObject.SetActive(number != 0);
             currentDraggableImage.transform.GetChild(0).rotation = Quaternion.Euler(0, 0, number*360);
-            
         }
     }
 
