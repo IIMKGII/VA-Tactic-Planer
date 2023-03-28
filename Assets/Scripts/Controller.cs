@@ -182,7 +182,7 @@ public class Controller : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.UpArrow))
         {
             Scrollbar scrollbar = FindObjectOfType<Scrollbar>();
-            if (scrollbar.value is < 1)
+            if (scrollbar.value < 1)
             {
                 changeThickness(FindObjectOfType<Scrollbar>().value + (1f / 11f));
                 FindObjectOfType<Scrollbar>().value += (1f / 11f);
@@ -267,7 +267,7 @@ public class Controller : MonoBehaviour
 
                 break;
             case 1:
-                currentColor = currentColor = new Color(0.5137254902f, 0.0745098039f, 0.6196078431f);
+                currentColor = new Color(0.5137254902f, 0.0745098039f, 0.6196078431f);
 
                 break;
             case 2:
