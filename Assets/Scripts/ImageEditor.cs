@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Security.Cryptography;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -10,12 +11,15 @@ public class ImageEditor : MonoBehaviour
     public float zoomSpeed = 1f;
     public float panSpeed = 1f;
 
+    public Camera cam;
+    public Canvas mainCanvas;
+    public GameObject[] hideScreenshotObjects;
+    
     private Vector3 canvasPosition;
     private Vector3 lastMousePosition;
 
     public float canvasScale;
-
-    // private LineRenderer lineRenderer;
+    
     public Image imageComponent;
 
 
@@ -24,6 +28,9 @@ public class ImageEditor : MonoBehaviour
     private Vector2 previousPosition;
     private bool isDrawing;
     private int thickness;
+
+    private int counter;
+    private bool doScreenshot = false;
 
 
 
@@ -52,10 +59,9 @@ public class ImageEditor : MonoBehaviour
 
     void Update()
     {
-
         if (Input.GetKeyDown(KeyCode.F12))
         {
-            //save screenshot
+            saveScreenshot();
         }
 
         if (Input.GetMouseButtonDown(0) && FindObjectOfType<Controller>().getDrawingEnabled())
@@ -181,5 +187,41 @@ public class ImageEditor : MonoBehaviour
         
         texture.SetPixels(colors);
         texture.Apply();
+    }
+
+    private void saveScreenshot()
+    {
+        foreach (var hideObject in hideScreenshotObjects)
+        {
+            hideObject.SetActive(false);
+        }
+
+        gameObject.GetComponent<RectTransform>().position = new Vector3(1372, 720, 0);
+        gameObject.GetComponent<RectTransform>().localScale = new Vector3(1, 1, 1);
+        
+        mainCanvas.renderMode = RenderMode.ScreenSpaceCamera;
+        mainCanvas.worldCamera = cam;
+            
+        RenderTexture currentRT = RenderTexture.active;
+        RenderTexture.active = cam.targetTexture;
+
+        cam.Render();
+
+        Texture2D Image = new Texture2D(cam.targetTexture.width, cam.targetTexture.height);
+        Image.ReadPixels(new Rect(0, 0, cam.targetTexture.width, cam.targetTexture.height), 0, 0);
+        Image.Apply();
+        RenderTexture.active = currentRT;
+
+        var Bytes = Image.EncodeToPNG();
+        Destroy(Image);
+
+        File.WriteAllBytes("Screenshot.png", Bytes);
+        mainCanvas.renderMode = RenderMode.ScreenSpaceOverlay;
+        counter = 0;
+            
+        foreach (var hideObject in hideScreenshotObjects)
+        {
+            hideObject.SetActive(true);
+        }
     }
 }
