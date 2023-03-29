@@ -1,21 +1,14 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
-using System.Security.Cryptography;
 using DefaultNamespace;
 using TMPro;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityEngine.Networking;
-using UnityEngine.Serialization;
 using UnityEngine.UI;
-using Debug = UnityEngine.Debug;
-using Object = UnityEngine.Object;
+
 
 public class Controller : MonoBehaviour
 {
@@ -94,7 +87,13 @@ public class Controller : MonoBehaviour
             calloutMaps[i] = Sprite.Create(calloutMapTexture[i], new Rect(0, 0, calloutMapTexture[i].width, calloutMapTexture[i].height), Vector2.one * 0.5f);
         }
 
-
+        if (normalMaps.Length > 1)
+        {
+            mainCanvasImage.sprite = normalMaps[0];
+            mainCanvasImage.preserveAspect = true;
+            mainCalloutImage.sprite = calloutMaps[0];
+            mainCalloutImage.preserveAspect = true;
+        }
 
         imageDropdown.ClearOptions();
         foreach (Sprite sprite in normalMaps)
