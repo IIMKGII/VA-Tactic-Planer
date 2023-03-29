@@ -205,18 +205,17 @@ public class Controller : MonoBehaviour
                 currentDraggableImage.setColor(currentColor);
                 
                 // currentDraggableImage.gameObject.GetComponent<RectTransform>().sizeDelta = new Vector2(50 * scale, 50 * scale);
-                currentDraggableImage.setSizeDelta(new Vector2(50 * scale, 50 * scale));
+                currentDraggableImage.setSizeDelta(new Vector2(50f*0.6f * scale, 50f*0.6f * scale));
             }
             else
             {
                 draggableIndex++;
                 // currentDraggableImage.gameObject.GetComponent<RectTransform>().sizeDelta = new Vector2(50 * scale, 50 * scale);
-                currentDraggableImage.setSizeDelta(new Vector2(50 * scale, 50 * scale));
-
-                // currentDraggableImage.gameObject.transform.GetChild(0).GetComponent<RectTransform>().sizeDelta = new Vector2(100 * scale, 100 * scale);
-                // currentDraggableImage.transform.GetChild(0).GetComponent<Draggable>().setParent(currentDraggableImage.getParent());
+                currentDraggableImage.setSizeDelta(new Vector2(50f*0.6f * scale, 50f*0.6f * scale));
+                
+                
                 temp.transform.GetChild(0).GetComponent<Draggable>().setParent(currentDraggableImage.transform);
-                currentDraggableImage.transform.GetChild(0).GetComponent<Draggable>().setSizeDelta(new Vector2(100 * scale, 100 * scale));
+                currentDraggableImage.transform.GetChild(0).GetComponent<Draggable>().setSizeDelta(new Vector2(80f*0.85f * scale, 80f*0.85f * scale));
                 currentDraggableImage.transform.GetChild(0).GetComponent<Draggable>().setIndex(draggableIndex);
                 draggables[draggableIndex] = currentDraggableImage.transform.GetChild(0).GetComponent<Draggable>();
                 currentDraggableImage.transform.GetChild(0).GetComponent<Draggable>().setActive(false);
@@ -425,7 +424,7 @@ public class Controller : MonoBehaviour
     public void newInstance()
     {
         Process p = new Process();
-        p.StartInfo.FileName = Application.dataPath + "/../VAPavlovComet.exe";
+        p.StartInfo.FileName = Application.dataPath + "/../PavlovStrategyPlanner.exe";
         p.Start();
     }
     
