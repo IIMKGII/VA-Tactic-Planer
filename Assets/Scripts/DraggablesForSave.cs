@@ -11,11 +11,11 @@ namespace DefaultNamespace
         public float rotationX, rotationY, rotationZ, rotationW;
         public float sizeDeltaX, sizeDeltaY;
         public float colorR, colorG, colorB, colorA;
-        public String parent;
+        public String parent, objectName;
         public int imageIndex;
 
         public DraggablesForSave(int index, bool isActive, Vector3 position, Quaternion rotation, Vector2 sizeDelta, Color color, String parent,
-            int imageIndex)
+            int imageIndex, String objectName)
         {
             this.index = index;
             this.isActive = isActive;
@@ -34,6 +34,7 @@ namespace DefaultNamespace
             this.colorA = color.a;
             this.parent = parent;
             this.imageIndex = imageIndex;
+            this.objectName = objectName;
         }
         
     }

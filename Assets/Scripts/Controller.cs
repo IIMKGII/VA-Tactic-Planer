@@ -7,6 +7,7 @@ using System.Runtime.Serialization.Formatters.Binary;
 using System.Security.Cryptography;
 using DefaultNamespace;
 using TMPro;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.Serialization;
@@ -44,6 +45,18 @@ public class Controller : MonoBehaviour
 
     void Start()
     {
+        if (!Directory.Exists(Application.persistentDataPath + "/Saves"))
+        {
+            Directory.CreateDirectory(Application.persistentDataPath + "/Saves");
+            for(int i = 0; i < 5; i++)
+            {
+                Directory.CreateDirectory(Application.persistentDataPath + "/Saves" + "/Save" + i);
+            }
+        }
+        
+        
+        
+        
         changeThickness(0.2167675f);
         // Populate the dropdown options
         imageDropdown.ClearOptions();
@@ -76,7 +89,7 @@ public class Controller : MonoBehaviour
         {
             // currentDraggableImage.transform.position = Input.mousePosition;
             currentDraggableImage.setPosition(Input.mousePosition);
-            if (currentDraggableImage.name == "Player(Clone)")
+            if (currentDraggableImage.name.Contains("Player(Clone)"))
             {
                 currentDraggableImage.transform.GetChild(0).GetComponent<Draggable>().setPosition(Input.mousePosition);
             }
@@ -130,6 +143,8 @@ public class Controller : MonoBehaviour
             currentDraggableImage = temp.GetComponent<Draggable>();
             currentDraggableImage.setPosition(Input.mousePosition);
             currentDraggableImage.setImageIndex(currentIndex);
+            currentDraggableImage.gameObject.name += draggableIndex;
+            currentDraggableImage.setObjectName(currentDraggableImage.gameObject.name);
 
             // currentDraggableImage.transform.SetParent(FindObjectOfType<ImageEditor>().transform);
             currentDraggableImage.setParent(FindObjectOfType<ImageEditor>().transform);
@@ -143,7 +158,7 @@ public class Controller : MonoBehaviour
             float scale = FindObjectOfType<ImageEditor>().canvasScale;
             
             
-            if (currentDraggableImage.name != "Player(Clone)")
+            if (!currentDraggableImage.name.Contains("Player(Clone)"))
             {
                 // currentDraggableImage.GetComponent<Image>().color = currentColor;
                 currentDraggableImage.setColor(currentColor);
@@ -254,7 +269,7 @@ public class Controller : MonoBehaviour
 
     public void rotateObject(float number)
     {
-        if (currentDraggableImage.gameObject.name != "Player(Clone)")
+        if (!currentDraggableImage.name.Contains("Player(Clone)"))
         {
             // currentDraggableImage.transform.rotation = Quaternion.Euler(0, 0, number*360);
             currentDraggableImage.setRotation(Quaternion.Euler(0, 0, number*360));
@@ -335,10 +350,7 @@ public class Controller : MonoBehaviour
                 currentColor = Color.black;
                 currentColor.a = 0;
                 break;
-                
-            
         }
-
         setupColors();
     }
 
@@ -366,7 +378,7 @@ public class Controller : MonoBehaviour
         }
     }
 
-    public void saveDraggableItemsToFile()
+    public void saveDraggableItemsToFile(int index)
     {
         int counter = 0;
         for (int i = 0; i < draggables.Length; i++)
@@ -387,7 +399,7 @@ public class Controller : MonoBehaviour
 
                 draggablesForSaves[counter] = new DraggablesForSave(draggables[i].getIndex(),
                     draggables[i].getActive(), draggables[i].getPosition(), draggables[i].getRotation(),
-                    draggables[i].getSizeDelta(), draggables[i].getColor(), draggables[i].getParent().name, draggables[i].getImageIndex());
+                    draggables[i].getSizeDelta(), draggables[i].getColor(), draggables[i].getParent().name, draggables[i].getImageIndex(), draggables[i].getObjectName());
                 counter++;
             }
             
@@ -395,16 +407,16 @@ public class Controller : MonoBehaviour
         
         
         BinaryFormatter bf = new BinaryFormatter();
-        FileStream stream = new FileStream("savedDraggableItems.dat", FileMode.Create);
+        FileStream stream = new FileStream(Application.persistentDataPath + "/Saves/Save" + index+ "/savedDraggableItems.dat", FileMode.Create);
         
         bf.Serialize(stream, draggablesForSaves);
         stream.Close();
     }
     
-    public void loadDraggableItemsFromFile()
+    public void loadDraggableItemsFromFile(int index)
     {
         BinaryFormatter bf = new BinaryFormatter();
-        FileStream stream = new FileStream("savedDraggableItems.dat", FileMode.Open);
+        FileStream stream = new FileStream(Application.persistentDataPath + "/Saves/Save" + index+ "/savedDraggableItems.dat", FileMode.Open);
         
         DraggablesForSave[] draggablesCopy = (DraggablesForSave[]) bf.Deserialize(stream);
         stream.Close();
@@ -418,7 +430,9 @@ public class Controller : MonoBehaviour
                 { 
                     temp = Instantiate(draggableImages[draggablesCopy[i].imageIndex], new Vector3(draggablesCopy[i].positionX, draggablesCopy[i].positionY, draggablesCopy[i].positionZ), new Quaternion(draggablesCopy[i].rotationX, draggablesCopy[i].rotationY, draggablesCopy[i].rotationZ, draggablesCopy[i].rotationW));
                     temp.AddComponent<Draggable>();
+                    Destroy(temp.transform.GetComponent<Button>());
                     draggables[i] = temp.GetComponent<Draggable>();
+                    draggables[i].gameObject.tag = "button";
                 }else if (draggablesCopy[i].imageIndex <= 10)
                 { 
                     temp = Instantiate(draggableImages[5], new Vector3(draggablesCopy[i].positionX, draggablesCopy[i].positionY, draggablesCopy[i].positionZ), new Quaternion(draggablesCopy[i].rotationX, draggablesCopy[i].rotationY, draggablesCopy[i].rotationZ, draggablesCopy[i].rotationW));
@@ -426,16 +440,17 @@ public class Controller : MonoBehaviour
                     temp.AddComponent<Draggable>();
                     draggables[i] = temp.GetComponent<Draggable>();
                     draggables[i].transform.GetComponent<Image>().sprite = players[draggablesCopy[i].imageIndex - 5];
+                    draggables[i].gameObject.tag = "button";
                 }
                 else
                 {
                     temp = Instantiate(draggableImages[5].transform.GetChild(0).gameObject, new Vector3(draggablesCopy[i].positionX, draggablesCopy[i].positionY, draggablesCopy[i].positionZ), new Quaternion(draggablesCopy[i].rotationX, draggablesCopy[i].rotationY, draggablesCopy[i].rotationZ, draggablesCopy[i].rotationW));
-                    temp.AddComponent<Draggable>();
                     draggables[i] = temp.GetComponent<Draggable>();
                     draggables[i].transform.GetComponent<Image>().sprite = arrows[draggablesCopy[i].imageIndex - 11];
+                    draggables[i].gameObject.tag = "Untagged";
                 }
                
-                
+                draggables[i].setObjectName(draggablesCopy[i].objectName);
                 draggables[i].setIndex(draggablesCopy[i].index);
                 draggables[i].setImageIndex(draggablesCopy[i].imageIndex);
                 draggables[i].setActive(draggablesCopy[i].isActive);
@@ -444,16 +459,6 @@ public class Controller : MonoBehaviour
                 draggables[i].setSizeDelta(new Vector2(draggablesCopy[i].sizeDeltaX, draggablesCopy[i].sizeDeltaY));
                 draggables[i].setColor(new Color(draggablesCopy[i].colorR, draggablesCopy[i].colorG, draggablesCopy[i].colorB, draggablesCopy[i].colorA));
                 draggables[i].setParent(GameObject.Find(draggablesCopy[i].parent).transform);
-
-                // if (draggablesCopy[i].imageIndex <= 4)
-                // {
-                //     draggables[i].gameObject.GetComponent<Image>().sprite = draggableImages[draggablesCopy[i].imageIndex].GetComponent<Image>().sprite;
-                // }else if (draggablesCopy[i].imageIndex <= 4 + players.Length)
-                // {
-                //     draggables[i].gameObject.GetComponent<Image>().sprite = players[draggablesCopy[i].imageIndex-4];
-                // }
-                
-                draggables[i].gameObject.tag = "button";
             }
         }
     }

@@ -15,6 +15,7 @@ public class Draggable : MonoBehaviour
     public Quaternion rotation;
     public Transform parent;
     public int imageIndex;
+    public String objectName;
     
     private void onValueChanged()
     {
@@ -24,7 +25,18 @@ public class Draggable : MonoBehaviour
         gameObject.GetComponent<Image>().color = color;
         gameObject.SetActive(isActive);
         transform.SetParent(parent);
-        
+    }
+    
+    
+    public void setObjectName(String objectName)
+    {
+        this.objectName = objectName;
+        gameObject.name = objectName;
+    }
+    
+    public String getObjectName()
+    {
+        return objectName;
     }
     
     public void setImageIndex(int imageIndex)
