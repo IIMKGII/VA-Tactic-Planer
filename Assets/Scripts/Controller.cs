@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
@@ -10,8 +11,11 @@ using TMPro;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.Networking;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
+using Debug = UnityEngine.Debug;
+using Object = UnityEngine.Object;
 
 public class Controller : MonoBehaviour
 {
@@ -23,8 +27,8 @@ public class Controller : MonoBehaviour
     public Draggable[] draggables = new Draggable[200];
     private int draggableIndex = 0;
 
-    [FormerlySerializedAs("imageSprites")] public Sprite[] normalMaps;
-    public Sprite[] calloutMaps;
+    public Sprite[] normalMaps = new Sprite[50];
+    public Sprite[] calloutMaps = new Sprite[50];
 
     private int playerIndex;
     public Sprite[] players, arrows;
@@ -53,17 +57,54 @@ public class Controller : MonoBehaviour
                 Directory.CreateDirectory(Application.persistentDataPath + "/Saves" + "/Save" + i);
             }
         }
-        
-        
-        
-        
         changeThickness(0.2167675f);
         // Populate the dropdown options
+        
+        
+        if (!Directory.Exists(Application.persistentDataPath + "/Maps"))
+        {
+            Directory.CreateDirectory(Application.persistentDataPath + "/Maps");
+        }
+
+        if (!Directory.Exists(Application.persistentDataPath + "/CalloutMaps"))
+        {
+            Directory.CreateDirectory(Application.persistentDataPath + "/CalloutMaps");
+        }
+        
+        String[] mapLocations = Directory.GetFiles (Application.persistentDataPath + "/Maps");
+        String[] calloutMapLocations = Directory.GetFiles (Application.persistentDataPath + "/CalloutMaps");
+        Texture2D[] mapTexture = new Texture2D[mapLocations.Length];
+        Texture2D[] calloutMapTexture = new Texture2D[calloutMapLocations.Length];
+        
+
+        for (int i = 0; i < mapLocations.Length; i++)
+        {
+            byte[] bytes = File.ReadAllBytes(mapLocations[i]);
+            byte[] bytes2 = File.ReadAllBytes(calloutMapLocations[i]);
+
+            mapTexture[i] = new Texture2D(2, 2);
+            mapTexture[i].LoadImage(bytes);
+            calloutMapTexture[i] = new Texture2D(2, 2);
+            calloutMapTexture[i].LoadImage(bytes2);
+            
+            normalMaps[i] = Sprite.Create(mapTexture[i], new Rect(0, 0, mapTexture[i].width, mapTexture[i].height), Vector2.one * 0.5f);
+            
+            normalMaps[i].name = mapLocations[i].Substring(mapLocations[i].LastIndexOf("/") + 6).Remove(mapLocations[i].Substring(mapLocations[i].LastIndexOf("/") + 6).Length -4);
+            
+            calloutMaps[i] = Sprite.Create(calloutMapTexture[i], new Rect(0, 0, calloutMapTexture[i].width, calloutMapTexture[i].height), Vector2.one * 0.5f);
+        }
+
+
+
         imageDropdown.ClearOptions();
         foreach (Sprite sprite in normalMaps)
         {
-            imageDropdown.options.Add(new TMP_Dropdown.OptionData(sprite.name));
+            if (sprite != null)
+            {
+                imageDropdown.options.Add(new TMP_Dropdown.OptionData(sprite.name));
+            }
         }
+        
         imageDropdown.value = 0;
         imageDropdown.RefreshShownValue();
         
@@ -381,6 +422,13 @@ public class Controller : MonoBehaviour
         }
     }
 
+    public void newInstance()
+    {
+        Process p = new Process();
+        p.StartInfo.FileName = Application.dataPath + "/../VAPavlovComet.exe";
+        p.Start();
+    }
+    
     public void saveDraggableItemsToFile(int index)
     {
         int counter = 0;
