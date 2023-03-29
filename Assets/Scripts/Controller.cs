@@ -107,7 +107,7 @@ public class Controller : MonoBehaviour
         imageDropdown.value = 0;
         imageDropdown.RefreshShownValue();
         
-        currentColor = new Color(0.00392156862745098f, 0.42745098039215684f, 0.5019607843137255f);
+        currentColor= new Color(0.0000000000f, 0.5647058824f, 0.6627450980f);
         setupColors();
     }
 
@@ -368,25 +368,25 @@ public class Controller : MonoBehaviour
             
             
             case 0:
-                currentColor = new Color(0.00392156862745098f, 0.42745098039215684f, 0.5019607843137255f);
+                currentColor = new Color(0.0000000000f, 0.5647058824f, 0.6627450980f);
 
                 break;
             case 1:
-                currentColor = new Color(0.5137254902f, 0.0745098039f, 0.6196078431f);
+                currentColor = new Color(0.0000000000f, 1.0000000000f, 0.3372549020f); 
 
                 break;
             case 2:
-                currentColor = new Color(0.0823529412f, 0.8078431373f, 0.8901960784f);
+                currentColor = new Color(0.9764705882f, 0.9803921569f, 0.0078431373f); 
                 break;
             case 3:
-                currentColor = new Color(0.6549019608f, 0.0470588235f, 0.2352941176f);
+                currentColor = new Color(1.0000000000f, 0.0000000000f, 0.3176470588f); 
 
                 break;
             case 4:
-                currentColor = new Color(0.0392156863f, 0.7019607843f, 0.3490196078f);
+                currentColor = new Color(0.0901960784f, 0.0000000000f, 1.0000000000f); 
                 break;
             case 5: 
-                currentColor = new Color(0.9333333333f, 0.9294117647f, 0.2078431373f);
+                currentColor = new Color(0.9254901961f, 0.0000000000f, 1.0000000000f); 
                 break;
             case 6: 
                 currentColor = Color.black;
