@@ -7,6 +7,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using iTextSharp.text;
 using iTextSharp.text.pdf;
+using UnityEngine.EventSystems;
 using Image = UnityEngine.UI.Image;
 using Color = UnityEngine.Color;
 
@@ -97,6 +98,19 @@ public class ImageEditor : MonoBehaviour
             if (currentColor.a == 0)
             {
                 DrawLine(x1, y1, x2, y2, currentColor, 20);
+                PointerEventData pointerEventData = new PointerEventData(EventSystem.current);
+                pointerEventData.position = Input.mousePosition;
+                List<RaycastResult> results = new List<RaycastResult>();
+                EventSystem.current.RaycastAll(pointerEventData, results);
+                
+                foreach (RaycastResult result in results)
+                {
+                    if (result.gameObject.CompareTag("button"))
+                    {
+                        FindObjectOfType<Controller>().draggables[result.gameObject.GetComponent<Draggable>().getIndex()] = null;
+                        Destroy(result.gameObject);
+                    }
+                }
             }
             else
             {
@@ -121,7 +135,6 @@ public class ImageEditor : MonoBehaviour
         if (Input.GetMouseButton(2))
         {
             Vector3 delta = Input.mousePosition - lastMousePosition;
-            delta /= canvasScale; // adjust for canvas scale
             canvasPosition += delta;
             lastMousePosition = Input.mousePosition;
         }

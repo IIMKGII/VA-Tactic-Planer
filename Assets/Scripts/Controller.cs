@@ -36,6 +36,8 @@ public class Controller : MonoBehaviour
     
     private float timer;
 
+    private float imageScale = 0.6f;
+    
     public Button colorButton;
 
     public Color currentColor;
@@ -204,17 +206,17 @@ public class Controller : MonoBehaviour
                 currentDraggableImage.setColor(currentColor);
                 
                 // currentDraggableImage.gameObject.GetComponent<RectTransform>().sizeDelta = new Vector2(50 * scale, 50 * scale);
-                currentDraggableImage.setSizeDelta(new Vector2(50f*0.6f * scale, 50f*0.6f * scale));
+                currentDraggableImage.setSizeDelta(new Vector2(50f*imageScale * scale, 50f*imageScale * scale));
             }
             else
             {
                 draggableIndex++;
                 // currentDraggableImage.gameObject.GetComponent<RectTransform>().sizeDelta = new Vector2(50 * scale, 50 * scale);
-                currentDraggableImage.setSizeDelta(new Vector2(50f*0.6f * scale, 50f*0.6f * scale));
+                currentDraggableImage.setSizeDelta(new Vector2(50f*imageScale * scale, 50f*imageScale * scale));
                 
                 
                 temp.transform.GetChild(0).GetComponent<Draggable>().setParent(currentDraggableImage.transform);
-                currentDraggableImage.transform.GetChild(0).GetComponent<Draggable>().setSizeDelta(new Vector2(80f*0.85f * scale, 80f*0.85f * scale));
+                currentDraggableImage.transform.GetChild(0).GetComponent<Draggable>().setSizeDelta(new Vector2(113f*imageScale * scale, 113f*imageScale * scale));
                 currentDraggableImage.transform.GetChild(0).GetComponent<Draggable>().setIndex(draggableIndex);
                 draggables[draggableIndex] = currentDraggableImage.transform.GetChild(0).GetComponent<Draggable>();
                 currentDraggableImage.transform.GetChild(0).GetComponent<Draggable>().setActive(false);
@@ -297,6 +299,31 @@ public class Controller : MonoBehaviour
             timer = 0f;
             smallDrag = false;
         }
+
+        if (Input.GetKeyDown(KeyCode.Q))
+        {
+            currentSelected(0);
+        }
+        if (Input.GetKeyDown(KeyCode.W))
+        {
+            currentSelected(1);
+        }
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            currentSelected(2);
+        }
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            currentSelected(3);
+        }
+        if (Input.GetKeyDown(KeyCode.T))
+        {
+            currentSelected(4);
+        }
+        if (Input.GetKeyDown(KeyCode.Y))
+        {
+            currentSelected(5);
+        }
     }
 
     public void currentSelected(int i)
@@ -322,6 +349,26 @@ public class Controller : MonoBehaviour
             currentDraggableImage.transform.GetChild(0).GetComponent<Draggable>().setRotation(Quaternion.Euler(0, 0, number*360));
             
             currentDraggableImage.transform.GetChild(0).GetComponent<Draggable>().setLocalPosition(Vector3.zero);
+        }
+    }
+
+    public void imageScaler(float scaler)
+    {
+        imageScale = scaler;
+        float scale = FindObjectOfType<ImageEditor>().canvasScale;
+        foreach (var draggable in draggables)
+        {
+            if (draggable != null)
+            {
+                if (draggable.name.Contains("Arrow"))
+                {
+                    draggable.setSizeDelta(new Vector2(113f*imageScale * scale, 113f*imageScale * scale));
+                }
+                else
+                {
+                    draggable.setSizeDelta(new Vector2(50f*imageScale * scale, 50f*imageScale * scale));
+                }
+            }
         }
     }
 
@@ -423,7 +470,7 @@ public class Controller : MonoBehaviour
     public void newInstance()
     {
         Process p = new Process();
-        p.StartInfo.FileName = Application.dataPath + "/../PavlovStrategyPlanner.exe";
+        p.StartInfo.FileName = Application.dataPath + "/../PavlovStrategyPlaner.exe";
         p.Start();
     }
     
