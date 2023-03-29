@@ -16,8 +16,8 @@ public class Draggable : MonoBehaviour
     public Transform parent;
     public int imageIndex;
     public String objectName;
-    
-    private void onValueChanged()
+
+    public void onValueChanged()
     {
         transform.rotation = rotation;
         gameObject.GetComponent<RectTransform>().sizeDelta = sizeDelta;
@@ -27,7 +27,11 @@ public class Draggable : MonoBehaviour
         transform.SetParent(parent);
     }
     
-    
+    public void setLocalPosition(Vector3 localPosition)
+    {
+        transform.localPosition = localPosition;
+    }
+
     public void setObjectName(String objectName)
     {
         this.objectName = objectName;
