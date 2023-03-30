@@ -134,6 +134,7 @@ public class Controller : MonoBehaviour
         if (reloadFirstTime)
         {
             loadDraggableItemsFromFile(reloadIndex);
+            reloadFirstTime = false;
             return;
         }
         
@@ -531,9 +532,12 @@ public class Controller : MonoBehaviour
     
     public void loadDraggableItemsFromFile(int index)
     {
-        reloadFirstTime = true;
-        reloadIndex = index;
-        
+        if (!reloadFirstTime)
+        {
+            reloadFirstTime = true;
+            reloadIndex = index;
+        }
+
         FindObjectOfType<ImageEditor>().resetScale();
         
         GameObject[] tempObjects = new GameObject[200];
