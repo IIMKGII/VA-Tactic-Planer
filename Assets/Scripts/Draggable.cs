@@ -65,8 +65,7 @@ public class Draggable : MonoBehaviour
     {
         this.sizeDelta = sizeDelta;
         gameObject.GetComponent<RectTransform>().localScale = sizeDelta;
-
-
+        
     }
     
     public Quaternion getRotation()

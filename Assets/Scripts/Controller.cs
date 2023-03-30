@@ -225,17 +225,17 @@ public class Controller : MonoBehaviour
             {
                 draggableIndex++;
                 // currentDraggableImage.gameObject.GetComponent<RectTransform>().sizeDelta = new Vector2(50 * scale, 50 * scale);
-                currentDraggableImage.setSizeDelta(new Vector2(1*imageScale * scale, 1*imageScale * scale));
+                currentDraggableImage.setSizeDelta(new Vector2(1f*imageScale * scale, 1f*imageScale * scale));
                 
                 
                 temp.transform.GetChild(0).GetComponent<Draggable>().setMyParent(currentDraggableImage.transform);
-                currentDraggableImage.transform.GetChild(0).GetComponent<Draggable>().setSizeDelta(new Vector2(2.2f*imageScale * scale, 2.2f*imageScale * scale));
                 currentDraggableImage.transform.GetChild(0).GetComponent<Draggable>().setIndex(draggableIndex);
                 draggables[draggableIndex] = currentDraggableImage.transform.GetChild(0).GetComponent<Draggable>();
                 currentDraggableImage.transform.GetChild(0).GetComponent<Draggable>().setActive(false);
                 currentDraggableImage.transform.GetChild(0).GetComponent<Draggable>().setPosition(currentDraggableImage.getPosition());
                 currentDraggableImage.transform.GetChild(0).GetComponent<Draggable>().setColor(Color.white);
-                currentDraggableImage.setColor(Color.white);
+                currentDraggableImage.transform.GetChild(0).GetComponent<Draggable>().setSizeDelta(new Vector2(1f, 1f));
+                    currentDraggableImage.setColor(Color.white);
                 currentDraggableImage.transform.GetChild(0).GetComponent<Draggable>().setActive(false);
 
                 int saveIndex = playerIndex + 5;
@@ -373,11 +373,7 @@ public class Controller : MonoBehaviour
         {
             if (draggable != null)
             {
-                if (draggable.name.Contains("Arrow"))
-                {
-                    draggable.setSizeDelta(new Vector2(2.2f*imageScale * scale, 2.2f*imageScale * scale));
-                }
-                else
+                if (!draggable.name.Contains("Arrow"))
                 {
                     draggable.setSizeDelta(new Vector2(1*imageScale * scale, 1*imageScale * scale));
                 }
@@ -596,6 +592,7 @@ public class Controller : MonoBehaviour
                     draggables[i].transform.GetComponent<Image>().sprite = players[draggablesCopy[i].imageIndex - 5];
                     draggables[i].gameObject.tag = "button";
                     draggables[i].setSizeDelta(Vector3.one);
+                    draggables[i].GetComponent<RectTransform>().sizeDelta = new Vector2(50, 50);
                 }
                 else
                 {
@@ -605,7 +602,7 @@ public class Controller : MonoBehaviour
                     draggables[i] = myGameObject.GetComponent<Draggable>();
                     draggables[i].transform.GetComponent<Image>().sprite = arrows[draggablesCopy[i].imageIndex - 11];
                     draggables[i].gameObject.tag = "Untagged";
-                    draggables[i].setSizeDelta(Vector3.one);
+                    // draggables[i].setSizeDelta(Vector3.one);
                     tempObjects[i] = myGameObject;
                     continue;
                 }
