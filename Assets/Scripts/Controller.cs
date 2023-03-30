@@ -43,7 +43,10 @@ public class Controller : MonoBehaviour
 
     public Color currentColor;
 
-    private bool reloadFirstTime;
+    private bool reloadFirstTimeLoad;
+    
+    int saveCounter = 0;
+    
     private int reloadIndex;
     private GameObject[] markForDestroy;
     
@@ -57,6 +60,7 @@ public class Controller : MonoBehaviour
             {
                 Directory.CreateDirectory(Application.persistentDataPath + "/Saves" + "/Save" + i);
             }
+            
         }
         changeThickness(0.2167675f);
         // Populate the dropdown options
@@ -65,6 +69,11 @@ public class Controller : MonoBehaviour
         if (!Directory.Exists(Application.persistentDataPath + "/Maps"))
         {
             Directory.CreateDirectory(Application.persistentDataPath + "/Maps");
+        }
+        
+        if (!Directory.Exists(Application.dataPath + "/../Screenshots"))
+        {
+            Directory.CreateDirectory(Application.dataPath + "/../Screenshots");
         }
 
         if (!Directory.Exists(Application.persistentDataPath + "/CalloutMaps"))
@@ -131,10 +140,17 @@ public class Controller : MonoBehaviour
 
     private void Update()
     {
-        if (reloadFirstTime)
+
+        if (reloadFirstTimeLoad)
         {
             loadDraggableItemsFromFile(reloadIndex);
-            reloadFirstTime = false;
+            reloadFirstTimeLoad = false;
+            return;
+        }
+
+        if (saveCounter > 0)
+        {
+            saveDraggableItemsToFile(reloadIndex);
             return;
         }
         
@@ -209,23 +225,20 @@ public class Controller : MonoBehaviour
             Destroy(currentDraggableImage.gameObject.GetComponent<Button>());
             
             currentDraggableImage.tag = "button";
-            
-            float scale = FindObjectOfType<ImageEditor>().canvasScale;
-            
-            
+
             if (!currentDraggableImage.name.Contains("Player(Clone)"))
             {
                 // currentDraggableImage.GetComponent<Image>().color = currentColor;
                 currentDraggableImage.setColor(currentColor);
                 
                 // currentDraggableImage.gameObject.GetComponent<RectTransform>().sizeDelta = new Vector2(50 * scale, 50 * scale);
-                currentDraggableImage.setSizeDelta(new Vector2(1*imageScale * scale, 1*imageScale * scale));
+                currentDraggableImage.setSizeDelta(new Vector2(1*imageScale , 1*imageScale ));
             }
             else
             {
                 draggableIndex++;
                 // currentDraggableImage.gameObject.GetComponent<RectTransform>().sizeDelta = new Vector2(50 * scale, 50 * scale);
-                currentDraggableImage.setSizeDelta(new Vector2(1f*imageScale * scale, 1f*imageScale * scale));
+                currentDraggableImage.setSizeDelta(new Vector2(0.6f*imageScale , 0.6f*imageScale ));
                 
                 
                 temp.transform.GetChild(0).GetComponent<Draggable>().setMyParent(currentDraggableImage.transform);
@@ -368,14 +381,21 @@ public class Controller : MonoBehaviour
     public void imageScaler(float scaler)
     {
         imageScale = scaler;
-        float scale = FindObjectOfType<ImageEditor>().canvasScale;
+
         foreach (var draggable in draggables)
         {
             if (draggable != null)
             {
                 if (!draggable.name.Contains("Arrow"))
                 {
-                    draggable.setSizeDelta(new Vector2(1*imageScale * scale, 1*imageScale * scale));
+                    if (draggable.name.Contains("Player(Clone)"))
+                    {
+                        draggable.setSizeDelta(new Vector2(0.6f*imageScale , 0.6f*imageScale ));
+                    }
+                    else
+                    {
+                        draggable.setSizeDelta(new Vector2(1*imageScale , 1*imageScale ));
+                    }
                 }
             }
         }
@@ -385,12 +405,6 @@ public class Controller : MonoBehaviour
     public void toggleMaps(bool isNormal)
     {
         mainCalloutImage.gameObject.SetActive(!isNormal);
-    }
-    
-    public void exportPDF()
-    {
-        FindObjectOfType<ImageEditor>().saveScreenshot();
-        isSelected = false;
     }
 
     public void drawMode()
@@ -485,6 +499,35 @@ public class Controller : MonoBehaviour
     
     public void saveDraggableItemsToFile(int index)
     {
+        reloadIndex = index;
+        if (saveCounter == 0)
+        {
+            FindObjectOfType<ImageEditor>().resetScale();
+            saveCounter++;
+            return;
+        }
+
+        if (saveCounter == 1)
+        {
+            for (int i = 0; i < draggables.Length; i++)
+            {
+                if (draggables[i] != null)
+                {
+                    draggables[i].setPosition(draggables[i].transform.position);
+                }
+            }
+
+            saveCounter++;
+            FindObjectOfType<ImageEditor>().setToBuffer();
+            return;
+        }
+
+        if (saveCounter == 2)
+        {
+            saveCounter = 0;
+        }
+        
+        
         int counter = 0;
         for (int i = 0; i < draggables.Length; i++)
         {
@@ -493,6 +536,7 @@ public class Controller : MonoBehaviour
                 counter++;
             }
         }
+        
         
         DraggablesForSave[] draggablesForSaves = new DraggablesForSave[counter];
 
@@ -526,9 +570,9 @@ public class Controller : MonoBehaviour
     
     public void loadDraggableItemsFromFile(int index)
     {
-        if (!reloadFirstTime)
+        if (!reloadFirstTimeLoad)
         {
-            reloadFirstTime = true;
+            reloadFirstTimeLoad = true;
             reloadIndex = index;
         }
 
@@ -589,7 +633,7 @@ public class Controller : MonoBehaviour
                     draggables[i] = myGameObject.GetComponent<Draggable>();
                     draggables[i].transform.GetComponent<Image>().sprite = players[draggablesCopy[i].imageIndex - 5];
                     draggables[i].gameObject.tag = "button";
-                    draggables[i].setSizeDelta(Vector3.one);
+                    draggables[i].setSizeDelta(new Vector3(0.6f, 0.6f, 0.6f));
                     draggables[i].GetComponent<RectTransform>().sizeDelta = new Vector2(50, 50);
                 }
                 else

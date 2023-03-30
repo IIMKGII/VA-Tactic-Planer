@@ -15,7 +15,7 @@ using Color = UnityEngine.Color;
 public class ImageEditor : MonoBehaviour
 {
     public float zoomSpeed = 1f;
-    public float panSpeed = 1f;
+
 
     public Camera cam;
     public Canvas mainCanvas;
@@ -23,15 +23,14 @@ public class ImageEditor : MonoBehaviour
     
     private Vector3 canvasPosition;
     private Vector3 lastMousePosition;
-    
-    private Vector3 defaultPosition;
-    private float defaultScale;
 
     public float canvasScale;
     
     public Image imageComponent;
 
-
+    private Vector3 positionBuffer;
+    private float scaleBuffer;
+    
     public Texture2D texture;
     private Color[] colors;
     private Vector2 previousPosition;
@@ -46,17 +45,23 @@ public class ImageEditor : MonoBehaviour
 
     public void resetScale()
     {
+        positionBuffer = canvasPosition;
+        scaleBuffer = canvasScale;
+        
         canvasPosition = Vector3.zero;
-        canvasScale = 0f;
+        canvasScale = 1f;
+    }
+
+    public void setToBuffer()
+    {
+        canvasPosition = positionBuffer;
+        canvasScale = scaleBuffer;
     }
     
     void Start()
     {
         canvasPosition = transform.localPosition;
         canvasScale = transform.localScale.x;
-
-        defaultPosition = transform.localPosition;
-        defaultScale = transform.localScale.x;
 
         texture = new Texture2D((int)imageComponent.rectTransform.rect.width,
             (int)imageComponent.rectTransform.rect.height);
@@ -251,11 +256,11 @@ public class ImageEditor : MonoBehaviour
         var Bytes = Image.EncodeToPNG();
         Destroy(Image);
 
-        File.WriteAllBytes("Screenshot"+ screenShotIndex +".png", Bytes);
+        File.WriteAllBytes(Application.dataPath + "/../Screenshots/Screenshot"+ screenShotIndex +".png", Bytes);
 
         iTextSharp.text.Rectangle pageSize = null;
  
-        using (var srcImage = new Bitmap("Screenshot"+ screenShotIndex + ".png"))
+        using (var srcImage = new Bitmap(Application.dataPath + "/../Screenshots/Screenshot"+ screenShotIndex + ".png"))
         {
             pageSize = new iTextSharp.text.Rectangle(0, 0, srcImage.Width, srcImage.Height);
         }
@@ -265,11 +270,11 @@ public class ImageEditor : MonoBehaviour
             var document = new iTextSharp.text.Document(pageSize, 0, 0, 0, 0);
             iTextSharp.text.pdf.PdfWriter.GetInstance(document, ms).SetFullCompression();
             document.Open();
-            var image = iTextSharp.text.Image.GetInstance("Screenshot"+ screenShotIndex + ".png");
+            var image = iTextSharp.text.Image.GetInstance(Application.dataPath + "/../Screenshots/Screenshot"+ screenShotIndex + ".png");
             document.Add(image);
             document.Close();
 
-            File.WriteAllBytes("Screenshot"+ screenShotIndex + ".pdf", ms.ToArray());
+            File.WriteAllBytes(Application.dataPath + "/../Screenshots/Screenshot"+ screenShotIndex + ".pdf", ms.ToArray());
         }
 
 
