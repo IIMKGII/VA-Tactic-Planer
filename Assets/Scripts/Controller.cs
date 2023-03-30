@@ -485,8 +485,6 @@ public class Controller : MonoBehaviour
     
     public void saveDraggableItemsToFile(int index)
     {
-        
-        FindObjectOfType<ImageEditor>().resetScale();
         int counter = 0;
         for (int i = 0; i < draggables.Length; i++)
         {
