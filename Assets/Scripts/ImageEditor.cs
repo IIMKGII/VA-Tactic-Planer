@@ -23,6 +23,9 @@ public class ImageEditor : MonoBehaviour
     
     private Vector3 canvasPosition;
     private Vector3 lastMousePosition;
+    
+    private Vector3 defaultPosition;
+    private float defaultScale;
 
     public float canvasScale;
     
@@ -41,11 +44,19 @@ public class ImageEditor : MonoBehaviour
 
 
 
+    public void resetScale()
+    {
+        canvasPosition = Vector3.zero;
+        canvasScale = 0f;
+    }
+    
     void Start()
     {
-
         canvasPosition = transform.localPosition;
         canvasScale = transform.localScale.x;
+
+        defaultPosition = transform.localPosition;
+        defaultScale = transform.localScale.x;
 
         texture = new Texture2D((int)imageComponent.rectTransform.rect.width,
             (int)imageComponent.rectTransform.rect.height);

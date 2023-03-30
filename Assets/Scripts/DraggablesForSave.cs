@@ -36,6 +36,11 @@ namespace DefaultNamespace
             this.imageIndex = imageIndex;
             this.objectName = objectName;
         }
+
+        public String getParent()
+        {
+            return this.parent;
+        }
         
     }
 }

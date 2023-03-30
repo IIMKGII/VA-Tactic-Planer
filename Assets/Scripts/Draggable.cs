@@ -17,15 +17,7 @@ public class Draggable : MonoBehaviour
     public int imageIndex;
     public String objectName;
 
-    public void onValueChanged()
-    {
-        transform.rotation = rotation;
-        gameObject.GetComponent<RectTransform>().sizeDelta = sizeDelta;
-        transform.position = position;
-        gameObject.GetComponent<Image>().color = color;
-        gameObject.SetActive(isActive);
-        transform.SetParent(parent);
-    }
+    
     
     public void setLocalPosition(Vector3 localPosition)
     {
@@ -53,10 +45,10 @@ public class Draggable : MonoBehaviour
         return imageIndex;
     }
     
-    public void setParent(Transform parent)
+    public void setMyParent(Transform parent)
     {
         this.parent = parent;
-        onValueChanged();
+        transform.SetParent(parent);
     }
     
     public Transform getParent()
@@ -69,10 +61,12 @@ public class Draggable : MonoBehaviour
         return sizeDelta;
     }
     
-    public void setSizeDelta(Vector2 sizeDelta)
+    public void setSizeDelta(Vector3 sizeDelta)
     {
         this.sizeDelta = sizeDelta;
-        onValueChanged();
+        gameObject.GetComponent<RectTransform>().localScale = sizeDelta;
+
+
     }
     
     public Quaternion getRotation()
@@ -83,7 +77,7 @@ public class Draggable : MonoBehaviour
     public void setRotation(Quaternion rotation)
     {
         this.rotation = rotation;
-        onValueChanged();
+        transform.rotation = rotation;
     }
     
     
@@ -100,13 +94,14 @@ public class Draggable : MonoBehaviour
     public void setPosition(Vector3 position)
     {
         this.position = position;
-        onValueChanged();
+        
+        transform.position = position;
     }
 
     public void setColor(Color color)
     {
         this.color = color;
-        onValueChanged();
+        gameObject.GetComponent<Image>().color = color;
     }
     
     public int getIndex()
@@ -122,7 +117,7 @@ public class Draggable : MonoBehaviour
     public void setActive(bool isActive)
     {
         this.isActive = isActive;
-        onValueChanged();
+        gameObject.SetActive(isActive);
     }
     
     public void setIndex(int index)

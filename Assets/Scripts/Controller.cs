@@ -8,6 +8,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using Debug = UnityEngine.Debug;
 
 
 public class Controller : MonoBehaviour
@@ -42,6 +43,11 @@ public class Controller : MonoBehaviour
 
     public Color currentColor;
 
+    private bool reloadFirstTime;
+    private int reloadIndex;
+    private GameObject[] markForDestroy;
+    
+    
     void Start()
     {
         if (!Directory.Exists(Application.persistentDataPath + "/Saves"))
@@ -125,6 +131,12 @@ public class Controller : MonoBehaviour
 
     private void Update()
     {
+        if (reloadFirstTime)
+        {
+            loadDraggableItemsFromFile(reloadIndex);
+            return;
+        }
+        
         checkNumbers();
         
         if (smallDrag)
@@ -189,7 +201,7 @@ public class Controller : MonoBehaviour
             currentDraggableImage.setObjectName(currentDraggableImage.gameObject.name);
 
             // currentDraggableImage.transform.SetParent(FindObjectOfType<ImageEditor>().transform);
-            currentDraggableImage.setParent(FindObjectOfType<ImageEditor>().transform);
+            currentDraggableImage.setMyParent(FindObjectOfType<ImageEditor>().transform);
             currentDraggableImage.setIndex(draggableIndex);
             draggables[draggableIndex] = currentDraggableImage;
             
@@ -206,17 +218,17 @@ public class Controller : MonoBehaviour
                 currentDraggableImage.setColor(currentColor);
                 
                 // currentDraggableImage.gameObject.GetComponent<RectTransform>().sizeDelta = new Vector2(50 * scale, 50 * scale);
-                currentDraggableImage.setSizeDelta(new Vector2(50f*imageScale * scale, 50f*imageScale * scale));
+                currentDraggableImage.setSizeDelta(new Vector2(1*imageScale * scale, 1*imageScale * scale));
             }
             else
             {
                 draggableIndex++;
                 // currentDraggableImage.gameObject.GetComponent<RectTransform>().sizeDelta = new Vector2(50 * scale, 50 * scale);
-                currentDraggableImage.setSizeDelta(new Vector2(50f*imageScale * scale, 50f*imageScale * scale));
+                currentDraggableImage.setSizeDelta(new Vector2(1*imageScale * scale, 1*imageScale * scale));
                 
                 
-                temp.transform.GetChild(0).GetComponent<Draggable>().setParent(currentDraggableImage.transform);
-                currentDraggableImage.transform.GetChild(0).GetComponent<Draggable>().setSizeDelta(new Vector2(113f*imageScale * scale, 113f*imageScale * scale));
+                temp.transform.GetChild(0).GetComponent<Draggable>().setMyParent(currentDraggableImage.transform);
+                currentDraggableImage.transform.GetChild(0).GetComponent<Draggable>().setSizeDelta(new Vector2(2.2f*imageScale * scale, 2.2f*imageScale * scale));
                 currentDraggableImage.transform.GetChild(0).GetComponent<Draggable>().setIndex(draggableIndex);
                 draggables[draggableIndex] = currentDraggableImage.transform.GetChild(0).GetComponent<Draggable>();
                 currentDraggableImage.transform.GetChild(0).GetComponent<Draggable>().setActive(false);
@@ -362,11 +374,11 @@ public class Controller : MonoBehaviour
             {
                 if (draggable.name.Contains("Arrow"))
                 {
-                    draggable.setSizeDelta(new Vector2(113f*imageScale * scale, 113f*imageScale * scale));
+                    draggable.setSizeDelta(new Vector2(2.2f*imageScale * scale, 2.2f*imageScale * scale));
                 }
                 else
                 {
-                    draggable.setSizeDelta(new Vector2(50f*imageScale * scale, 50f*imageScale * scale));
+                    draggable.setSizeDelta(new Vector2(1*imageScale * scale, 1*imageScale * scale));
                 }
             }
         }
@@ -476,6 +488,8 @@ public class Controller : MonoBehaviour
     
     public void saveDraggableItemsToFile(int index)
     {
+        
+        FindObjectOfType<ImageEditor>().resetScale();
         int counter = 0;
         for (int i = 0; i < draggables.Length; i++)
         {
@@ -492,7 +506,6 @@ public class Controller : MonoBehaviour
         {
             if(draggables[i] != null)
             {
-
                 draggablesForSaves[counter] = new DraggablesForSave(draggables[i].getIndex(),
                     draggables[i].getActive(), draggables[i].getPosition(), draggables[i].getRotation(),
                     draggables[i].getSizeDelta(), draggables[i].getColor(), draggables[i].getParent().name, draggables[i].getImageIndex(), draggables[i].getObjectName());
@@ -518,6 +531,25 @@ public class Controller : MonoBehaviour
     
     public void loadDraggableItemsFromFile(int index)
     {
+        reloadFirstTime = true;
+        reloadIndex = index;
+        
+        FindObjectOfType<ImageEditor>().resetScale();
+        
+        GameObject[] tempObjects = new GameObject[200];
+        int tempCounter = 0;
+
+        for (int i = 0; i < draggables.Length; i++)
+        {
+            if (draggables[i] != null)
+            {
+                Destroy(draggables[i].gameObject);
+                draggables[i] = null;
+            }
+        }
+        
+        int counter = 0;
+        
         BinaryFormatter bf = new BinaryFormatter();
         FileStream stream = new FileStream(Application.persistentDataPath + "/Saves/Save" + index+ "/savedDraggableItems.dat", FileMode.Open);
 
@@ -531,36 +563,65 @@ public class Controller : MonoBehaviour
 
         DraggablesForSave[] draggablesCopy = (DraggablesForSave[]) bf.Deserialize(stream);
         stream.Close();
-
+        
+        
         for(int i = 0; i < draggablesCopy.Length; i++)
         {
             if (draggablesCopy[i] != null)
             {
+                counter++;
                 GameObject temp = null;
                 if (draggablesCopy[i].imageIndex <= 4)
-                { 
-                    temp = Instantiate(draggableImages[draggablesCopy[i].imageIndex], new Vector3(draggablesCopy[i].positionX, draggablesCopy[i].positionY, draggablesCopy[i].positionZ), new Quaternion(draggablesCopy[i].rotationX, draggablesCopy[i].rotationY, draggablesCopy[i].rotationZ, draggablesCopy[i].rotationW));
-                    temp.AddComponent<Draggable>();
-                    Destroy(temp.transform.GetComponent<Button>());
-                    draggables[i] = temp.GetComponent<Draggable>();
-                    draggables[i].gameObject.tag = "button";
-                }else if (draggablesCopy[i].imageIndex <= 10)
                 {
-                    temp = Instantiate(draggableImages[5], new Vector3(draggablesCopy[i].positionX, draggablesCopy[i].positionY, draggablesCopy[i].positionZ), new Quaternion(draggablesCopy[i].rotationX, draggablesCopy[i].rotationY, draggablesCopy[i].rotationZ, draggablesCopy[i].rotationW));
-                    Destroy(temp.transform.GetChild(0).gameObject);
-                    temp.AddComponent<Draggable>();
-                    draggables[i] = temp.GetComponent<Draggable>();
+                    
+                    GameObject myGameObject = new GameObject();
+                    myGameObject.AddComponent<Draggable>();
+                    myGameObject.AddComponent<Image>();
+                    draggables[i] = myGameObject.GetComponent<Draggable>();
+                    draggables[i].gameObject.tag = "button";
+                    draggables[i].transform.GetComponent<Image>().sprite = draggableImages[draggablesCopy[i].imageIndex].GetComponent<Image>().sprite;
+                    draggables[i].setSizeDelta(Vector3.one);
+                    draggables[i].GetComponent<RectTransform>().sizeDelta = new Vector2(50, 50);
+                }else if (draggablesCopy[i].imageIndex <= 10)
+                    
+                {
+                    GameObject myGameObject = new GameObject();
+                    myGameObject.AddComponent<Draggable>();
+                    myGameObject.AddComponent<Image>();
+                    draggables[i] = myGameObject.GetComponent<Draggable>();
                     draggables[i].transform.GetComponent<Image>().sprite = players[draggablesCopy[i].imageIndex - 5];
                     draggables[i].gameObject.tag = "button";
+                    draggables[i].setSizeDelta(Vector3.one);
                 }
                 else
                 {
-                    temp = Instantiate(draggableImages[5].transform.GetChild(0).gameObject);
-                    draggables[i] = temp.GetComponent<Draggable>();
+                    GameObject myGameObject = new GameObject();
+                    myGameObject.AddComponent<Draggable>();
+                    myGameObject.AddComponent<Image>();
+                    draggables[i] = myGameObject.GetComponent<Draggable>();
                     draggables[i].transform.GetComponent<Image>().sprite = arrows[draggablesCopy[i].imageIndex - 11];
                     draggables[i].gameObject.tag = "Untagged";
+                    draggables[i].setSizeDelta(Vector3.one);
+                    tempObjects[i] = myGameObject;
+                    continue;
                 }
-               
+                
+                draggables[i].setObjectName(draggablesCopy[i].objectName);
+                draggables[i].setIndex(draggablesCopy[i].index);
+                draggables[i].setImageIndex(draggablesCopy[i].imageIndex);
+                draggables[i].setActive(draggablesCopy[i].isActive);
+                draggables[i].setPosition(new Vector3(draggablesCopy[i].positionX, draggablesCopy[i].positionY, draggablesCopy[i].positionZ));
+                draggables[i].setRotation(new Quaternion(draggablesCopy[i].rotationX, draggablesCopy[i].rotationY, draggablesCopy[i].rotationZ, draggablesCopy[i].rotationW));
+                draggables[i].setColor(new Color(draggablesCopy[i].colorR, draggablesCopy[i].colorG, draggablesCopy[i].colorB, draggablesCopy[i].colorA));
+                draggables[i].setMyParent(GameObject.Find(draggablesCopy[i].parent).transform);
+            }
+        }
+
+        for (int i = 0; i < tempObjects.Length; i++)
+        {
+            if (tempObjects[i] != null)
+            {
+                draggables[i].setMyParent(draggables[i-1].transform);
                 draggables[i].setObjectName(draggablesCopy[i].objectName);
                 draggables[i].setIndex(draggablesCopy[i].index);
                 draggables[i].setImageIndex(draggablesCopy[i].imageIndex);
@@ -569,7 +630,9 @@ public class Controller : MonoBehaviour
                 draggables[i].setRotation(new Quaternion(draggablesCopy[i].rotationX, draggablesCopy[i].rotationY, draggablesCopy[i].rotationZ, draggablesCopy[i].rotationW));
                 draggables[i].setSizeDelta(new Vector2(draggablesCopy[i].sizeDeltaX, draggablesCopy[i].sizeDeltaY));
                 draggables[i].setColor(new Color(draggablesCopy[i].colorR, draggablesCopy[i].colorG, draggablesCopy[i].colorB, draggablesCopy[i].colorA));
-                draggables[i].setParent(GameObject.Find(draggablesCopy[i].parent).transform);
+                draggables[i].transform.localScale = Vector3.one;
+                
+                
             }
         }
     }
