@@ -76,7 +76,11 @@ public class ImageEditor : MonoBehaviour
         texture.Apply();
         imageComponent.sprite =
             Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), Vector2.one * 0.5f);
-
+        
+        var info = new DirectoryInfo(Application.dataPath + "/../Screenshots");
+        var fileInfo = info.GetFiles();
+        
+        screenShotIndex = (fileInfo.Length/2)+1;
     }
 
     void Update()
