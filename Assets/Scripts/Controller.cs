@@ -512,7 +512,7 @@ public class Controller : MonoBehaviour
     public void newInstance()
     {
         Process p = new Process();
-        p.StartInfo.FileName = Application.dataPath + "/../PavlovStrategyPlaner.exe";
+        p.StartInfo.FileName = Application.dataPath + "/../VA Tactic Planer.exe";
         p.Start();
     }
     
