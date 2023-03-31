@@ -51,7 +51,7 @@ public class Controller : MonoBehaviour
     private GameObject[] markForDestroy;
     
     
-    void Start()
+    void Awake()
     {
         if (!Directory.Exists(Application.persistentDataPath + "/Saves"))
         {
@@ -206,7 +206,7 @@ public class Controller : MonoBehaviour
             }
         }
         
-        if (isSelected && Input.GetMouseButtonDown(0) && !drawingEnabled && spawn)
+        if (isSelected && Input.GetMouseButtonDown(0) && !drawingEnabled && spawn && currentColor.a != 0)
         {
             GameObject temp = Instantiate(draggableImages[currentIndex], Input.mousePosition, Quaternion.identity);
             temp.AddComponent<Draggable>();
@@ -293,6 +293,12 @@ public class Controller : MonoBehaviour
         {
             colorSelector(6);
         }
+
+        if (Input.GetKeyDown(KeyCode.Alpha8))
+        {
+            drawMode();
+        }
+        
         setupColors();
 
         if (Input.GetKeyDown(KeyCode.DownArrow))
@@ -483,7 +489,7 @@ public class Controller : MonoBehaviour
 
         foreach (var image in draggableImages)
         {
-            if (image.name != "Player")
+            if (image.name != "Player" || currentColor.a != 0)
             {
                 image.GetComponent<Button>().colors = colorBlock;
             }

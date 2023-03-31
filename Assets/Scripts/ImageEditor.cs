@@ -59,7 +59,7 @@ public class ImageEditor : MonoBehaviour
         canvasScale = scaleBuffer;
     }
     
-    void Start()
+    void Awake()
     {
         canvasPosition = transform.localPosition;
         canvasScale = transform.localScale.x;
@@ -77,10 +77,20 @@ public class ImageEditor : MonoBehaviour
         texture.Apply();
         imageComponent.sprite =
             Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), Vector2.one * 0.5f);
+    }
 
+    private void Start()
+    {
         inputField = FindObjectOfType<TMP_InputField>();
+
+        float scaler = gameObject.GetComponent<Image>().sprite.texture.height /
+                       gameObject.GetComponent<RectTransform>().rect.height;
         
-        inputField.transform.position = new Vector3(imageComponent.transform.position.x + imageComponent.sprite.texture.width/4f, inputField.transform.position.y, 0);
+        float calculateWIdth = gameObject.GetComponent<Image>().sprite.texture.width / scaler;
+        
+        Debug.Log(scaler);
+
+        inputField.transform.localPosition = new Vector3(calculateWIdth/2f + inputField.GetComponent<RectTransform>().rect.width/2f , 0, 0);
     }
 
     void Update()
@@ -257,10 +267,20 @@ public class ImageEditor : MonoBehaviour
         }
         else
         {
-            cam.targetTexture = new RenderTexture( transform.GetComponent<Image>().sprite.texture.width + (int) inputField.GetComponent<RectTransform>().rect.width,
-                transform.GetComponent<Image>().sprite.texture.height, 24);
+            inputField = FindObjectOfType<TMP_InputField>();
 
-            gameObject.GetComponent<RectTransform>().position = new Vector3( mainCanvas.GetComponent<RectTransform>().transform.position.x - (int) inputField.GetComponent<RectTransform>().rect.width /3f, mainCanvas.transform.position.y, 0);
+            float scaler = gameObject.GetComponent<Image>().sprite.texture.height /
+                           gameObject.GetComponent<RectTransform>().rect.height;
+        
+            float calculateWIdth = gameObject.GetComponent<Image>().sprite.texture.width / scaler;
+            float calculateHeight = gameObject.GetComponent<Image>().sprite.texture.height / scaler;
+        
+            Debug.Log(scaler);
+
+
+            cam.targetTexture = new RenderTexture( (int)calculateWIdth + (int) inputField.GetComponent<RectTransform>().rect.width, (int) calculateHeight, 24);
+
+            gameObject.GetComponent<RectTransform>().position = new Vector3(mainCanvas.gameObject.transform.position.x-2f/3f*(int) inputField.GetComponent<RectTransform>().rect.width, mainCanvas.gameObject.transform.position.y, 0);
             gameObject.GetComponent<RectTransform>().localScale = new Vector3(1, 1, 1);
         }
         
