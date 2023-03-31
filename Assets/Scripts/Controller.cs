@@ -126,6 +126,8 @@ public class Controller : MonoBehaviour
         
         currentColor= new Color(0.0000000000f, 0.5647058824f, 0.6627450980f);
         setupColors();
+
+        FindObjectOfType<Toggle>().isOn = false;
     }
 
     public void OnDropdownValueChanged(int value)
@@ -248,7 +250,7 @@ public class Controller : MonoBehaviour
                 currentDraggableImage.transform.GetChild(0).GetComponent<Draggable>().setPosition(currentDraggableImage.getPosition());
                 currentDraggableImage.transform.GetChild(0).GetComponent<Draggable>().setColor(Color.white);
                 currentDraggableImage.transform.GetChild(0).GetComponent<Draggable>().setSizeDelta(new Vector2(1f, 1f));
-                    currentDraggableImage.setColor(Color.white);
+                currentDraggableImage.setColor(Color.white);
                 currentDraggableImage.transform.GetChild(0).GetComponent<Draggable>().setActive(false);
 
                 int saveIndex = playerIndex + 5;
@@ -400,7 +402,7 @@ public class Controller : MonoBehaviour
                     }
                     else
                     {
-                        draggable.setSizeDelta(new Vector2(1*imageScale , 1*imageScale ));
+                        draggable.setSizeDelta(new Vector2(1f*imageScale , 1f*imageScale ));
                     }
                 }
             }
@@ -410,7 +412,7 @@ public class Controller : MonoBehaviour
 
     public void toggleMaps(bool isNormal)
     {
-        mainCalloutImage.gameObject.SetActive(!isNormal);
+        mainCalloutImage.gameObject.SetActive(isNormal);
     }
 
     public void drawMode()
@@ -485,13 +487,24 @@ public class Controller : MonoBehaviour
             fadeDuration = 0.1f
         };
 
-        colorButton.colors = colorBlock;
-
-        foreach (var image in draggableImages)
+        if (currentColor.a != 0)
         {
-            if (image.name != "Player" || currentColor.a != 0)
+            colorButton.transform.GetChild(0).GetComponent<Image>().color = currentColor;
+        }
+
+        // foreach (var image in draggableImages)
+        // {
+        //     if (image.name != "Player" || currentColor.a != 0)
+        //     {
+        //         image.GetComponent<Button>().colors = colorBlock;
+        //     }
+        // }
+
+        for (int i = 0; i < draggableImages.Length-1; i++)
+        {
+            if (currentColor.a != 0)
             {
-                image.GetComponent<Button>().colors = colorBlock;
+                draggableImages[i].GetComponent<Button>().colors = colorBlock;
             }
         }
     }
@@ -601,6 +614,11 @@ public class Controller : MonoBehaviour
         
         int counter = 0;
         
+        if(!File.Exists(Application.persistentDataPath + "/Saves/Save" + index+ "/savedDraggableItems.dat") || !File.Exists(Application.persistentDataPath + "/Saves/Save" + index + "/savedImage.png") || !File.Exists(Application.persistentDataPath + "/Saves/Save" + index + "/savedText.txt"))
+        {
+            return;
+        }
+        
         BinaryFormatter bf = new BinaryFormatter();
         FileStream stream = new FileStream(Application.persistentDataPath + "/Saves/Save" + index+ "/savedDraggableItems.dat", FileMode.Open);
 
@@ -631,10 +649,9 @@ public class Controller : MonoBehaviour
                     draggables[i] = myGameObject.GetComponent<Draggable>();
                     draggables[i].gameObject.tag = "button";
                     draggables[i].transform.GetComponent<Image>().sprite = draggableImages[draggablesCopy[i].imageIndex].GetComponent<Image>().sprite;
-                    draggables[i].setSizeDelta(Vector3.one);
-                    draggables[i].GetComponent<RectTransform>().sizeDelta = new Vector2(50 * imageScale, 50 * imageScale);
+                    draggables[i].setSizeDelta(new Vector2(imageScale,  imageScale));
+                    draggables[i].GetComponent<RectTransform>().sizeDelta = new Vector2(40, 40);
                 }else if (draggablesCopy[i].imageIndex <= 10)
-                    
                 {
                     GameObject myGameObject = new GameObject();
                     myGameObject.AddComponent<Draggable>();
@@ -642,8 +659,8 @@ public class Controller : MonoBehaviour
                     draggables[i] = myGameObject.GetComponent<Draggable>();
                     draggables[i].transform.GetComponent<Image>().sprite = players[draggablesCopy[i].imageIndex - 5];
                     draggables[i].gameObject.tag = "button";
-                    draggables[i].setSizeDelta(new Vector3(0.6f, 0.6f, 0.6f));
-                    draggables[i].GetComponent<RectTransform>().sizeDelta = new Vector2(50* imageScale, 50* imageScale);
+                    draggables[i].setSizeDelta(new Vector2(0.6f*imageScale , 0.6f*imageScale));
+                    draggables[i].GetComponent<RectTransform>().sizeDelta = new Vector2(40, 40);
                 }
                 else
                 {
@@ -653,7 +670,7 @@ public class Controller : MonoBehaviour
                     draggables[i] = myGameObject.GetComponent<Draggable>();
                     draggables[i].transform.GetComponent<Image>().sprite = arrows[draggablesCopy[i].imageIndex - 11];
                     draggables[i].gameObject.tag = "Untagged";
-                    // draggables[i].setSizeDelta(Vector3.one);
+                    draggables[i].setSizeDelta(Vector3.one);
                     tempObjects[i] = myGameObject;
                     continue;
                 }
@@ -680,12 +697,13 @@ public class Controller : MonoBehaviour
                 draggables[i].setActive(draggablesCopy[i].isActive);
                 draggables[i].setPosition(new Vector3(draggablesCopy[i].positionX, draggablesCopy[i].positionY, draggablesCopy[i].positionZ));
                 draggables[i].setRotation(new Quaternion(draggablesCopy[i].rotationX, draggablesCopy[i].rotationY, draggablesCopy[i].rotationZ, draggablesCopy[i].rotationW));
-                draggables[i].setSizeDelta(new Vector2(draggablesCopy[i].sizeDeltaX, draggablesCopy[i].sizeDeltaY));
+                draggables[i].setSizeDelta(new Vector2(1f, 1f));
                 draggables[i].setColor(new Color(draggablesCopy[i].colorR, draggablesCopy[i].colorG, draggablesCopy[i].colorB, draggablesCopy[i].colorA));
                 draggables[i].transform.localScale = Vector3.one;
                 
                 
             }
         }
+        imageScaler(imageScale);
     }
 }
