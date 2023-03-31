@@ -132,12 +132,12 @@ PlayerSettings:
   vulkanEnableLateAcquireNextImage: 0
   vulkanEnableCommandBufferRecycling: 1
   m_SupportedAspectRatios:
-    4:3: 1
-    5:4: 1
-    16:10: 1
+    4:3: 0
+    5:4: 0
+    16:10: 0
     16:9: 1
-    Others: 1
-  bundleVersion: 1.1.0
+    Others: 0
+  bundleVersion: 1.1.1
   preloadedAssets: []
   metroInputSource: 0
   wsaTransparentSwapchain: 0
@@ -157,7 +157,7 @@ PlayerSettings:
   androidSupportedAspectRatio: 1
   androidMaxAspectRatio: 2.1
   applicationIdentifier:
-    Standalone: com.IIMKGII.PavlovStrategyPlanner
+    Standalone: com.IIMKGII.VA-Tactic-Planer
   buildNumber:
     Standalone: 0
     iPhone: 0
@@ -611,7 +611,7 @@ PlayerSettings:
   ps4IncludedModules: []
   ps4attribVROutputEnabled: 0
   monoEnv: 
-  splashScreenBackgroundSourceLandscape: {fileID: 0}
+  splashScreenBackgroundSourceLandscape: {fileID: 21300000, guid: 9a2f470639a5d2447a0e35d1a0156b1d, type: 3}
   splashScreenBackgroundSourcePortrait: {fileID: 0}
   blurSplashScreenBackground: 1
   spritePackerPolicy: 

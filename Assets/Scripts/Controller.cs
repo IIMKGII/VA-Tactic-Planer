@@ -50,6 +50,9 @@ public class Controller : MonoBehaviour
     private int reloadIndex;
     private GameObject[] markForDestroy;
     
+    private float lastWidth;
+    private float lastHeight;
+    
     
     void Awake()
     {
@@ -129,6 +132,8 @@ public class Controller : MonoBehaviour
 
         FindObjectOfType<Toggle>().isOn = false;
     }
+    
+
 
     public void OnDropdownValueChanged(int value)
     {
@@ -137,12 +142,12 @@ public class Controller : MonoBehaviour
         mainCanvasImage.preserveAspect = true;
         mainCalloutImage.sprite = calloutMaps[value];
         mainCalloutImage.preserveAspect = true;
+        FindObjectOfType<ImageEditor>().setTextFieldPosition();
     }
     
 
     private void Update()
     {
-
         if (reloadFirstTimeLoad)
         {
             loadDraggableItemsFromFile(reloadIndex);
