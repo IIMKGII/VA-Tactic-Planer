@@ -561,6 +561,9 @@ public class Controller : MonoBehaviour
         
         byte[] bytes = Sprite.EncodeToPNG();
         File.WriteAllBytes(Application.persistentDataPath + "/Saves/Save" + index+ "/savedImage.png", bytes);
+
+        String textString = FindObjectOfType<TMP_InputField>().text;
+        File.WriteAllText(Application.persistentDataPath + "/Saves/Save" + index+ "/savedText.txt", textString);
         
         
 
@@ -600,9 +603,9 @@ public class Controller : MonoBehaviour
         Texture2D texture = new Texture2D(2, 2);
         texture.LoadImage(bytes);
         FindObjectOfType<ImageEditor>().newDrawing(texture);
+
+        FindObjectOfType<TMP_InputField>().text = File.ReadAllText(Application.persistentDataPath + "/Saves/Save" + index + "/savedText.txt");
         
-
-
         DraggablesForSave[] draggablesCopy = (DraggablesForSave[]) bf.Deserialize(stream);
         stream.Close();
         
@@ -623,7 +626,7 @@ public class Controller : MonoBehaviour
                     draggables[i].gameObject.tag = "button";
                     draggables[i].transform.GetComponent<Image>().sprite = draggableImages[draggablesCopy[i].imageIndex].GetComponent<Image>().sprite;
                     draggables[i].setSizeDelta(Vector3.one);
-                    draggables[i].GetComponent<RectTransform>().sizeDelta = new Vector2(50, 50);
+                    draggables[i].GetComponent<RectTransform>().sizeDelta = new Vector2(50 * imageScale, 50 * imageScale);
                 }else if (draggablesCopy[i].imageIndex <= 10)
                     
                 {
@@ -634,7 +637,7 @@ public class Controller : MonoBehaviour
                     draggables[i].transform.GetComponent<Image>().sprite = players[draggablesCopy[i].imageIndex - 5];
                     draggables[i].gameObject.tag = "button";
                     draggables[i].setSizeDelta(new Vector3(0.6f, 0.6f, 0.6f));
-                    draggables[i].GetComponent<RectTransform>().sizeDelta = new Vector2(50, 50);
+                    draggables[i].GetComponent<RectTransform>().sizeDelta = new Vector2(50* imageScale, 50* imageScale);
                 }
                 else
                 {

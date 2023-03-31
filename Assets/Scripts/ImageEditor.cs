@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
@@ -7,6 +8,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using iTextSharp.text;
 using iTextSharp.text.pdf;
+using TMPro;
 using UnityEngine.EventSystems;
 using Image = UnityEngine.UI.Image;
 using Color = UnityEngine.Color;
@@ -39,10 +41,9 @@ public class ImageEditor : MonoBehaviour
 
     private int counter;
     private bool doScreenshot = false;
-    private int screenShotIndex;
-
-
-
+    
+    private TMP_InputField inputField;
+    
     public void resetScale()
     {
         positionBuffer = canvasPosition;
@@ -76,18 +77,22 @@ public class ImageEditor : MonoBehaviour
         texture.Apply();
         imageComponent.sprite =
             Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), Vector2.one * 0.5f);
+
+        inputField = FindObjectOfType<TMP_InputField>();
         
-        var info = new DirectoryInfo(Application.dataPath + "/../Screenshots");
-        var fileInfo = info.GetFiles();
-        
-        screenShotIndex = (fileInfo.Length/2)+1;
+        inputField.transform.position = new Vector3(imageComponent.transform.position.x + imageComponent.sprite.texture.width/4f, inputField.transform.position.y, 0);
     }
 
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.F12))
         {
-            saveScreenshot();
+            saveScreenshot(false);
+        }
+
+        if (Input.GetKeyDown(KeyCode.F11))
+        {
+            saveScreenshot(true);
         }
 
         if (Input.GetMouseButtonDown(0) && FindObjectOfType<Controller>().getDrawingEnabled())
@@ -230,19 +235,34 @@ public class ImageEditor : MonoBehaviour
         texture.Apply();
     }
 
-    public void saveScreenshot()
+    public void saveScreenshot(bool showText)
     {
         foreach (var hideObject in hideScreenshotObjects)
         {
             hideObject.SetActive(false);
         }
-
-        cam.targetTexture = new RenderTexture(transform.GetComponent<Image>().sprite.texture.width,
-            transform.GetComponent<Image>().sprite.texture.height, 24);
         
-        // gameObject.GetComponent<RectTransform>().position = new Vector3(1372, 720, 0);
-        gameObject.GetComponent<RectTransform>().position = mainCanvas.gameObject.transform.position;
-        gameObject.GetComponent<RectTransform>().localScale = new Vector3(1, 1, 1);
+        if (showText)
+        {
+            
+            inputField.gameObject.SetActive(false);
+            cam.targetTexture = new RenderTexture(transform.GetComponent<Image>().sprite.texture.width,
+                transform.GetComponent<Image>().sprite.texture.height, 24);
+        
+            // gameObject.GetComponent<RectTransform>().position = new Vector3(1372, 720, 0);
+            gameObject.GetComponent<RectTransform>().position = mainCanvas.gameObject.transform.position;
+            gameObject.GetComponent<RectTransform>().localScale = new Vector3(1, 1, 1);
+        
+            
+        }
+        else
+        {
+            cam.targetTexture = new RenderTexture( transform.GetComponent<Image>().sprite.texture.width + (int) inputField.GetComponent<RectTransform>().rect.width,
+                transform.GetComponent<Image>().sprite.texture.height, 24);
+
+            gameObject.GetComponent<RectTransform>().position = new Vector3( mainCanvas.GetComponent<RectTransform>().transform.position.x - (int) inputField.GetComponent<RectTransform>().rect.width /3f, mainCanvas.transform.position.y, 0);
+            gameObject.GetComponent<RectTransform>().localScale = new Vector3(1, 1, 1);
+        }
         
         mainCanvas.renderMode = RenderMode.ScreenSpaceCamera;
         mainCanvas.worldCamera = cam;
@@ -259,12 +279,15 @@ public class ImageEditor : MonoBehaviour
 
         var Bytes = Image.EncodeToPNG();
         Destroy(Image);
+        
+        
+        String fileName = DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss");
 
-        File.WriteAllBytes(Application.dataPath + "/../Screenshots/Screenshot"+ screenShotIndex +".png", Bytes);
+        File.WriteAllBytes(Application.dataPath + "/../Screenshots/Screenshot"+ fileName +".png", Bytes);
 
         iTextSharp.text.Rectangle pageSize = null;
  
-        using (var srcImage = new Bitmap(Application.dataPath + "/../Screenshots/Screenshot"+ screenShotIndex + ".png"))
+        using (var srcImage = new Bitmap(Application.dataPath + "/../Screenshots/Screenshot"+ fileName + ".png"))
         {
             pageSize = new iTextSharp.text.Rectangle(0, 0, srcImage.Width, srcImage.Height);
         }
@@ -274,11 +297,11 @@ public class ImageEditor : MonoBehaviour
             var document = new iTextSharp.text.Document(pageSize, 0, 0, 0, 0);
             iTextSharp.text.pdf.PdfWriter.GetInstance(document, ms).SetFullCompression();
             document.Open();
-            var image = iTextSharp.text.Image.GetInstance(Application.dataPath + "/../Screenshots/Screenshot"+ screenShotIndex + ".png");
+            var image = iTextSharp.text.Image.GetInstance(Application.dataPath + "/../Screenshots/Screenshot"+ fileName + ".png");
             document.Add(image);
             document.Close();
 
-            File.WriteAllBytes(Application.dataPath + "/../Screenshots/Screenshot"+ screenShotIndex + ".pdf", ms.ToArray());
+            File.WriteAllBytes(Application.dataPath + "/../Screenshots/Screenshot"+ fileName + ".pdf", ms.ToArray());
         }
 
 
@@ -290,6 +313,6 @@ public class ImageEditor : MonoBehaviour
         {
             hideObject.SetActive(true);
         }
-        screenShotIndex++;
+        inputField.gameObject.SetActive(true);
     }
 }
