@@ -4,7 +4,7 @@ VA Tactic Planer is a tool designed for the virtual reality FPS game, Pavlov VR.
 
 ## Getting Started
 
-To start using VA Tactic Planer, you must first generate the folder structure by running the program once. After that, you can place your maps and callout maps in the following directory: `C:\Users\username\AppData\LocalLow\IIMKGII\PavlovStrategyPlaner\Maps` and `C:\Users\username\AppData\LocalLow\IIMKGII\PavlovStrategyPlaner\CalloutMaps`.
+To start using VA Tactic Planer, you must first generate the folder structure by running the program once. After that, you can place your maps and callout maps in the following directory: `C:\Users\username\AppData\LocalLow\IIMKGII\VA Tactic Planer\Maps` and `C:\Users\username\AppData\LocalLow\IIMKGII\VA Tactic Planer\CalloutMaps`.
 
 ## Features
 
