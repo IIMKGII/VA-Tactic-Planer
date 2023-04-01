@@ -5146,6 +5146,7 @@ MonoBehaviour:
   - {fileID: 1185489869}
   colorButton: {fileID: 814966994}
   currentColor: {r: 0, g: 0, b: 0, a: 0}
+  scrollbar: {fileID: 1856248887}
 --- !u!114 &1080276905
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7688,10 +7689,10 @@ MonoBehaviour:
   m_FillRect: {fileID: 1162513901}
   m_HandleRect: {fileID: 616622542}
   m_Direction: 0
-  m_MinValue: 0.1
-  m_MaxValue: 2
+  m_MinValue: 0.4
+  m_MaxValue: 3
   m_WholeNumbers: 0
-  m_Value: 0.6
+  m_Value: 0.8
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:
@@ -8411,10 +8412,10 @@ MonoBehaviour:
   m_FillRect: {fileID: 995810975}
   m_HandleRect: {fileID: 1882798979}
   m_Direction: 0
-  m_MinValue: 0
+  m_MinValue: 0.1
   m_MaxValue: 1
   m_WholeNumbers: 0
-  m_Value: 0
+  m_Value: 0.34
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:

@@ -52,6 +52,8 @@ public class Controller : MonoBehaviour
     
     private float lastWidth;
     private float lastHeight;
+
+    [SerializeField] private Slider scrollbar;
     
     
     void Awake()
@@ -310,21 +312,19 @@ public class Controller : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.DownArrow))
         {
-            Scrollbar scrollbar = FindObjectOfType<Scrollbar>();
             if (scrollbar.value > 0)
             {
-                changeThickness(FindObjectOfType<Scrollbar>().value - (1f / 11f));
-                FindObjectOfType<Scrollbar>().value -= (1f / 11f);
+                changeThickness(scrollbar.value - (1f / 11f));
+                scrollbar.value -= (1f / 11f);
             }
         }
 
         if (Input.GetKeyDown(KeyCode.UpArrow))
         {
-            Scrollbar scrollbar = FindObjectOfType<Scrollbar>();
             if (scrollbar.value < 1)
             {
-                changeThickness(FindObjectOfType<Scrollbar>().value + (1f / 11f));
-                FindObjectOfType<Scrollbar>().value += (1f / 11f);
+                changeThickness(scrollbar.value + (1f / 11f));
+                scrollbar.value += (1f / 11f);
             }
             
         }

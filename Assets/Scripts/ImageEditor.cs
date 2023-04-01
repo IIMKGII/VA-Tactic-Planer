@@ -344,7 +344,6 @@ public class ImageEditor : MonoBehaviour
         }
 
 
-
         mainCanvas.renderMode = RenderMode.ScreenSpaceOverlay;
         counter = 0;
             
