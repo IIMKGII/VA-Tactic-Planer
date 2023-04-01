@@ -169,10 +169,7 @@ public class Controller : MonoBehaviour
         {
             // currentDraggableImage.transform.position = Input.mousePosition;
             currentDraggableImage.setPosition(Input.mousePosition);
-            if (currentDraggableImage.name.Contains("Player(Clone)"))
-            {
-                currentDraggableImage.transform.GetChild(0).GetComponent<Draggable>().setPosition(Input.mousePosition);
-            }
+            currentDraggableImage.setLocalPosition(currentDraggableImage.transform.localPosition);
         }
         
         
@@ -222,6 +219,7 @@ public class Controller : MonoBehaviour
             
             currentDraggableImage = temp.GetComponent<Draggable>();
             currentDraggableImage.setPosition(Input.mousePosition);
+            currentDraggableImage.setLocalPosition(currentDraggableImage.transform.localPosition);
             currentDraggableImage.setImageIndex(currentIndex);
             currentDraggableImage.gameObject.name += draggableIndex;
             currentDraggableImage.setObjectName(currentDraggableImage.gameObject.name);
@@ -254,7 +252,7 @@ public class Controller : MonoBehaviour
                 currentDraggableImage.transform.GetChild(0).GetComponent<Draggable>().setIndex(draggableIndex);
                 draggables[draggableIndex] = currentDraggableImage.transform.GetChild(0).GetComponent<Draggable>();
                 currentDraggableImage.transform.GetChild(0).GetComponent<Draggable>().setActive(false);
-                currentDraggableImage.transform.GetChild(0).GetComponent<Draggable>().setPosition(currentDraggableImage.getPosition());
+                currentDraggableImage.transform.GetChild(0).GetComponent<Draggable>().setLocalPosition(currentDraggableImage.getLocalPosition());
                 currentDraggableImage.transform.GetChild(0).GetComponent<Draggable>().setColor(Color.white);
                 currentDraggableImage.transform.GetChild(0).GetComponent<Draggable>().setSizeDelta(new Vector2(1f, 1f));
                 currentDraggableImage.setColor(Color.white);
@@ -555,7 +553,7 @@ public class Controller : MonoBehaviour
             {
                 if (draggables[i] != null)
                 {
-                    draggables[i].setPosition(draggables[i].transform.position);
+                    draggables[i].setLocalPosition(draggables[i].transform.localPosition);
                 }
             }
 
@@ -587,8 +585,9 @@ public class Controller : MonoBehaviour
         {
             if(draggables[i] != null)
             {
+                Debug.Log(draggables[i].getLocalPosition());
                 draggablesForSaves[counter] = new DraggablesForSave(draggables[i].getIndex(),
-                    draggables[i].getActive(), draggables[i].getPosition(), draggables[i].getRotation(),
+                    draggables[i].getActive(), draggables[i].getLocalPosition(), draggables[i].getRotation(),
                     draggables[i].getSizeDelta(), draggables[i].getColor(), draggables[i].getParent().name, draggables[i].getImageIndex(), draggables[i].getObjectName());
                 counter++;
             }
@@ -702,10 +701,11 @@ public class Controller : MonoBehaviour
                 draggables[i].setIndex(draggablesCopy[i].index);
                 draggables[i].setImageIndex(draggablesCopy[i].imageIndex);
                 draggables[i].setActive(draggablesCopy[i].isActive);
-                draggables[i].setPosition(new Vector3(draggablesCopy[i].positionX, draggablesCopy[i].positionY, draggablesCopy[i].positionZ));
                 draggables[i].setRotation(new Quaternion(draggablesCopy[i].rotationX, draggablesCopy[i].rotationY, draggablesCopy[i].rotationZ, draggablesCopy[i].rotationW));
                 draggables[i].setColor(new Color(draggablesCopy[i].colorR, draggablesCopy[i].colorG, draggablesCopy[i].colorB, draggablesCopy[i].colorA));
                 draggables[i].setMyParent(GameObject.Find(draggablesCopy[i].parent).transform);
+                draggables[i].setLocalPosition(new Vector3(draggablesCopy[i].positionX, draggablesCopy[i].positionY, draggablesCopy[i].positionZ));
+
             }
         }
 
@@ -718,7 +718,7 @@ public class Controller : MonoBehaviour
                 draggables[i].setIndex(draggablesCopy[i].index);
                 draggables[i].setImageIndex(draggablesCopy[i].imageIndex);
                 draggables[i].setActive(draggablesCopy[i].isActive);
-                draggables[i].setPosition(new Vector3(draggablesCopy[i].positionX, draggablesCopy[i].positionY, draggablesCopy[i].positionZ));
+                draggables[i].setLocalPosition(new Vector3(draggablesCopy[i].positionX, draggablesCopy[i].positionY, draggablesCopy[i].positionZ));
                 draggables[i].setRotation(new Quaternion(draggablesCopy[i].rotationX, draggablesCopy[i].rotationY, draggablesCopy[i].rotationZ, draggablesCopy[i].rotationW));
                 draggables[i].setSizeDelta(new Vector2(1f, 1f));
                 draggables[i].setColor(new Color(draggablesCopy[i].colorR, draggablesCopy[i].colorG, draggablesCopy[i].colorB, draggablesCopy[i].colorA));

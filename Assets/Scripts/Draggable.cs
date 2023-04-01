@@ -23,6 +23,11 @@ public class Draggable : MonoBehaviour
     {
         transform.localPosition = localPosition;
     }
+    
+    public Vector3 getLocalPosition()
+    {
+        return transform.localPosition;
+    }
 
     public void setObjectName(String objectName)
     {
@@ -77,12 +82,6 @@ public class Draggable : MonoBehaviour
     {
         this.rotation = rotation;
         transform.rotation = rotation;
-    }
-    
-    
-    public Vector3 getPosition()
-    {
-        return position;
     }
 
     public Color getColor()
