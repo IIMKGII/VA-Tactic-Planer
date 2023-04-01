@@ -5147,6 +5147,7 @@ MonoBehaviour:
   colorButton: {fileID: 814966994}
   currentColor: {r: 0, g: 0, b: 0, a: 0}
   scrollbar: {fileID: 1856248887}
+  imageScalerScrollbar: {fileID: 1636695988}
 --- !u!114 &1080276905
 MonoBehaviour:
   m_ObjectHideFlags: 0

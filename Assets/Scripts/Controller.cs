@@ -53,7 +53,7 @@ public class Controller : MonoBehaviour
     private float lastWidth;
     private float lastHeight;
 
-    [SerializeField] private Slider scrollbar;
+    [SerializeField] private Slider scrollbar, imageScalerScrollbar;
     
     
     void Awake()
@@ -326,8 +326,26 @@ public class Controller : MonoBehaviour
                 changeThickness(scrollbar.value + (1f / 11f));
                 scrollbar.value += (1f / 11f);
             }
-            
         }
+        
+        if (Input.GetKeyDown(KeyCode.LeftArrow))
+        {
+            if (imageScalerScrollbar.value > 0.4)
+            {
+                imageScaler(imageScalerScrollbar.value - (1f / 11f));
+                imageScalerScrollbar.value -= (1f / 5f);
+            }
+        }
+        
+        if (Input.GetKeyDown(KeyCode.RightArrow))
+        {
+            if (imageScalerScrollbar.value < 3)
+            {
+                imageScaler(imageScalerScrollbar.value + (1f / 11f));
+                imageScalerScrollbar.value += (1f / 5f);
+            }
+        }
+        
         if (Input.GetKeyDown(KeyCode.Delete))
         {
             draggables[currentDraggableImage.getIndex()] = null;
