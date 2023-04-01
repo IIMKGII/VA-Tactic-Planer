@@ -5146,6 +5146,7 @@ MonoBehaviour:
   - {fileID: 1185489869}
   colorButton: {fileID: 814966994}
   currentColor: {r: 0, g: 0, b: 0, a: 0}
+  obergineImage: {fileID: 21300000, guid: 61db0a27210183d44a1f235da10a49d3, type: 3}
   scrollbar: {fileID: 1856248887}
   imageScalerScrollbar: {fileID: 1636695988}
 --- !u!114 &1080276905

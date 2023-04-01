@@ -53,6 +53,23 @@ public class Controller : MonoBehaviour
     private float lastWidth;
     private float lastHeight;
 
+    private KeyCode[] keys = new KeyCode[]
+    {
+        KeyCode.O,
+        KeyCode.B,
+        KeyCode.E,
+        KeyCode.R,
+        KeyCode.G,
+        KeyCode.I,
+        KeyCode.N,
+        KeyCode.E
+    };
+
+    private bool obergine;
+    private int sequenceIndex;
+    [SerializeField] private Sprite obergineImage;
+    
+
     [SerializeField] private Slider scrollbar, imageScalerScrollbar;
     
     
@@ -147,9 +164,36 @@ public class Controller : MonoBehaviour
         FindObjectOfType<ImageEditor>().setTextFieldPosition();
     }
     
+    private void obergineTime()
+    {
+        obergine = true;
+        
+        if (obergine)
+        {
+            draggableImages[5].transform.GetChild(0).GetComponent<Image>().sprite = obergineImage;
+            foreach (var draggable in draggables)
+            {
+                if (draggable != null && draggable.name.Contains("Arrow"))
+                {
+                    draggable.gameObject.GetComponent<Image>().sprite = obergineImage;
+                }
+            }
+        }
+    }
+    
 
     private void Update()
     {
+
+        if (Input.GetKeyDown(keys[sequenceIndex]))
+        {
+            if(++sequenceIndex == keys.Length)
+            {
+                sequenceIndex = 0;
+                obergineTime();
+            }
+        }else if (Input.anyKeyDown) sequenceIndex = 0;
+        
         if (reloadFirstTimeLoad)
         {
             loadDraggableItemsFromFile(reloadIndex);
@@ -690,7 +734,15 @@ public class Controller : MonoBehaviour
                     myGameObject.AddComponent<Draggable>();
                     myGameObject.AddComponent<Image>();
                     draggables[i] = myGameObject.GetComponent<Draggable>();
-                    draggables[i].transform.GetComponent<Image>().sprite = arrows[draggablesCopy[i].imageIndex - 11];
+                    if (obergine)
+                    {
+                        draggables[i].transform.GetComponent<Image>().sprite = obergineImage;
+                    }
+                    else
+                    {
+                        draggables[i].transform.GetComponent<Image>().sprite = arrows[draggablesCopy[i].imageIndex - 11];
+                    }
+                    
                     draggables[i].gameObject.tag = "Untagged";
                     draggables[i].setSizeDelta(Vector3.one);
                     tempObjects[i] = myGameObject;
