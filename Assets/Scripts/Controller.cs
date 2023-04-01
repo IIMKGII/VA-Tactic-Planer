@@ -55,7 +55,8 @@ public class Controller : MonoBehaviour
 
     private KeyCode[] keys = new KeyCode[]
     {
-        KeyCode.O,
+        KeyCode.A,
+        KeyCode.U,
         KeyCode.B,
         KeyCode.E,
         KeyCode.R,
@@ -65,9 +66,9 @@ public class Controller : MonoBehaviour
         KeyCode.E
     };
 
-    private bool obergine;
+    private bool aubergine;
     private int sequenceIndex;
-    [SerializeField] private Sprite obergineImage;
+    [SerializeField] private Sprite aubergineImage;
     
 
     [SerializeField] private Slider scrollbar, imageScalerScrollbar;
@@ -164,18 +165,18 @@ public class Controller : MonoBehaviour
         FindObjectOfType<ImageEditor>().setTextFieldPosition();
     }
     
-    private void obergineTime()
+    private void aubergineTime()
     {
-        obergine = true;
+        aubergine = true;
         
-        if (obergine)
+        if (aubergine)
         {
-            draggableImages[5].transform.GetChild(0).GetComponent<Image>().sprite = obergineImage;
+            draggableImages[5].transform.GetChild(0).GetComponent<Image>().sprite = aubergineImage;
             foreach (var draggable in draggables)
             {
                 if (draggable != null && draggable.name.Contains("Arrow"))
                 {
-                    draggable.gameObject.GetComponent<Image>().sprite = obergineImage;
+                    draggable.gameObject.GetComponent<Image>().sprite = aubergineImage;
                 }
             }
         }
@@ -190,7 +191,7 @@ public class Controller : MonoBehaviour
             if(++sequenceIndex == keys.Length)
             {
                 sequenceIndex = 0;
-                obergineTime();
+                aubergineTime();
             }
         }else if (Input.anyKeyDown) sequenceIndex = 0;
         
@@ -734,9 +735,9 @@ public class Controller : MonoBehaviour
                     myGameObject.AddComponent<Draggable>();
                     myGameObject.AddComponent<Image>();
                     draggables[i] = myGameObject.GetComponent<Draggable>();
-                    if (obergine)
+                    if (aubergine)
                     {
-                        draggables[i].transform.GetComponent<Image>().sprite = obergineImage;
+                        draggables[i].transform.GetComponent<Image>().sprite = aubergineImage;
                     }
                     else
                     {

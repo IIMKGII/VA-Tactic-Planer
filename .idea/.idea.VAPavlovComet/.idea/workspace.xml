@@ -3,6 +3,9 @@
   <component name="ChangeListManager">
     <list default="true" id="5bf4b402-87ae-4513-8773-ded698e74c3b" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.VAPavlovComet/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.VAPavlovComet/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Resources/Player/obergine.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Resources/Player/obergine.png.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scenes/SampleScene.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/SampleScene.unity" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scripts/Controller.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Controller.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -85,7 +88,8 @@
       <workItem from="1680300048590" duration="4409000" />
       <workItem from="1680350472133" duration="861000" />
       <workItem from="1680369367266" duration="1070000" />
-      <workItem from="1680376500904" duration="1283000" />
+      <workItem from="1680376500904" duration="1741000" />
+      <workItem from="1680378702807" duration="205000" />
     </task>
     <servers />
   </component>
