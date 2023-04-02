@@ -44,9 +44,6 @@ public class Controller : MonoBehaviour
     public Color currentColor;
 
     private bool reloadFirstTimeLoad;
-    
-    int saveCounter = 0;
-    
     private int reloadIndex;
     private GameObject[] markForDestroy;
     
@@ -202,12 +199,6 @@ public class Controller : MonoBehaviour
             return;
         }
 
-        if (saveCounter > 0)
-        {
-            saveDraggableItemsToFile(reloadIndex);
-            return;
-        }
-        
         checkNumbers();
         
         if (smallDrag)
@@ -585,34 +576,7 @@ public class Controller : MonoBehaviour
     public void saveDraggableItemsToFile(int index)
     {
         reloadIndex = index;
-        if (saveCounter == 0)
-        {
-            FindObjectOfType<ImageEditor>().resetScale();
-            saveCounter++;
-            return;
-        }
 
-        if (saveCounter == 1)
-        {
-            for (int i = 0; i < draggables.Length; i++)
-            {
-                if (draggables[i] != null)
-                {
-                    draggables[i].setLocalPosition(draggables[i].transform.localPosition);
-                }
-            }
-
-            saveCounter++;
-            FindObjectOfType<ImageEditor>().setToBuffer();
-            return;
-        }
-
-        if (saveCounter == 2)
-        {
-            saveCounter = 0;
-        }
-        
-        
         int counter = 0;
         for (int i = 0; i < draggables.Length; i++)
         {
