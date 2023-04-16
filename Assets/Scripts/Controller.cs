@@ -182,7 +182,6 @@ public class Controller : MonoBehaviour
 
     private void Update()
     {
-
         if (Input.GetKeyDown(keys[sequenceIndex]))
         {
             if(++sequenceIndex == keys.Length)

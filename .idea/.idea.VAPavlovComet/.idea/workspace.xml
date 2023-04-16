@@ -3,6 +3,12 @@
   <component name="ChangeListManager">
     <list default="true" id="5bf4b402-87ae-4513-8773-ded698e74c3b" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.VAPavlovComet/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.VAPavlovComet/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Resources/Player/aubergine.png.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Resources/Player/aubergine.png.meta" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Resources/Player/blau 1.png.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Resources/Player/blau 1.png.meta" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scenes/SampleScene.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/SampleScene.unity" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Controller.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Controller.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/ImageEditor.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ImageEditor.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -88,6 +94,8 @@
       <workItem from="1680378702807" duration="205000" />
       <workItem from="1680379635753" duration="735000" />
       <workItem from="1680433455458" duration="234000" />
+      <workItem from="1681492688067" duration="331000" />
+      <workItem from="1681682810143" duration="4712000" />
     </task>
     <servers />
   </component>

@@ -11,8 +11,8 @@ To start using VA Tactic Planer, you must first generate the folder structure by
 VA Tactic Planer provides the following features:
 
 - Drawing: Use numbers 1-8 to draw with different size pens. Arrows up/down can be used to increase/decrease the size of the pen.
-- Icons: Use letters Q-Z to add icons to the map to represent players or objectives. The delete key can be used to delete icons.
-- Screenshots: Take screenshots with F11 (without text field) and F12 (with text field) to share your strategy with your team.
+- Icons: Use letters Q-Z to add icons to the map to represent players or objectives. The delete key can be used to delete icons. Arrows left/right can be used to increase/decrease the size of the icons.
+- Screenshots: Take screenshots with F10 (keep current zoom level, but no text field) F11 (with text field) and F12 (without text field) to share your strategy with your team.
 
 ## Contributing
 
