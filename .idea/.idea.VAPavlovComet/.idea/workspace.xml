@@ -3,9 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="5bf4b402-87ae-4513-8773-ded698e74c3b" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.VAPavlovComet/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.VAPavlovComet/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scenes/SampleScene.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/SampleScene.unity" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Controller.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Controller.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/ImageEditor.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ImageEditor.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -94,7 +91,7 @@
       <workItem from="1680433455458" duration="234000" />
       <workItem from="1681492688067" duration="331000" />
       <workItem from="1681682810143" duration="4712000" />
-      <workItem from="1682971044752" duration="1406000" />
+      <workItem from="1682971044752" duration="1965000" />
     </task>
     <servers />
   </component>
