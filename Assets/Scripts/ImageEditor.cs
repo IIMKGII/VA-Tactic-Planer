@@ -52,31 +52,13 @@ public class ImageEditor : MonoBehaviour
         canvasPosition = Vector3.zero;
         canvasScale = 1f;
     }
-
-    public void setToBuffer()
-    {
-        canvasPosition = positionBuffer;
-        canvasScale = scaleBuffer;
-    }
     
     void Awake()
     {
         canvasPosition = transform.localPosition;
         canvasScale = transform.localScale.x;
-
-        texture = new Texture2D((int)imageComponent.rectTransform.rect.width,
-            (int)imageComponent.rectTransform.rect.height);
-        colors = texture.GetPixels();
-        for (int i = 0; i < colors.Length; i++)
-        {
-            colors[i] = Color.black;
-            colors[i].a = 0;
-        }
         
-        texture.SetPixels(colors);
-        texture.Apply();
-        imageComponent.sprite =
-            Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), Vector2.one * 0.5f);
+        setAllPixelsTransparent();
     }
 
     private void Start()
@@ -86,6 +68,23 @@ public class ImageEditor : MonoBehaviour
         setTextFieldPosition();
     }
 
+    public void clearAll()
+    {
+        Controller controller = FindObjectOfType<Controller>();
+        setAllPixelsTransparent();
+        Draggable[] draggables = controller.getDraggables();
+
+        foreach (var draggable in draggables)
+        {
+            if (draggable != null)
+            {
+                draggables[draggable.getIndex()] = null;
+                Destroy(draggable.gameObject);
+            }
+        }
+        controller.resetDraggableIndex();
+    }
+    
     public void setTextFieldPosition()
     {
         float scaler = calculateScaler();
@@ -119,8 +118,35 @@ public class ImageEditor : MonoBehaviour
             saveScreenshot(false, false);
         }
 
+        draw();
+        if(Input.mousePosition.x > 0 && Input.mousePosition.x < Screen.width && Input.mousePosition.y > 0 && Input.mousePosition.y < Screen.height)
+        {
+            // Zoom with scroll wheel
+            float scroll = Input.GetAxis("Mouse ScrollWheel");
+            canvasScale += scroll * zoomSpeed;
+            canvasScale = Mathf.Clamp(canvasScale, 1f, 10f);
+        }
         
+        // Pan with middle mouse button
+        if (Input.GetMouseButtonDown(2))
+        {
+            lastMousePosition = Input.mousePosition;
+        }
 
+        if (Input.GetMouseButton(2))
+        {
+            Vector3 delta = Input.mousePosition - lastMousePosition;
+            canvasPosition += delta;
+            lastMousePosition = Input.mousePosition;
+        }
+
+        // Update canvas transform
+        transform.localScale = Vector3.one * canvasScale;
+        transform.localPosition = canvasPosition;
+    }
+
+    private void draw()
+    {
         if (Input.GetMouseButtonDown(0) && FindObjectOfType<Controller>().getDrawingEnabled())
         {
             isDrawing = true;
@@ -136,6 +162,19 @@ public class ImageEditor : MonoBehaviour
 
         if (isDrawing)
         {
+            //check if mouse is over gameobject tagged UIElement
+            PointerEventData pointerData = new PointerEventData(EventSystem.current) {position = Input.mousePosition};
+            List<RaycastResult> results2 = new List<RaycastResult>();
+            EventSystem.current.RaycastAll(pointerData, results2);
+            foreach (RaycastResult result in results2)
+            {
+            
+                if (result.gameObject.CompareTag("UIElement"))
+                {
+                    return;
+                }
+            }
+            
             Vector2 localPoint;
             RectTransformUtility.ScreenPointToLocalPointInRectangle(imageComponent.rectTransform, Input.mousePosition,
                 null, out localPoint);
@@ -169,34 +208,8 @@ public class ImageEditor : MonoBehaviour
             }
             previousPosition = localPoint;
         }
-
-
-        if(Input.mousePosition.x > 0 && Input.mousePosition.x < Screen.width && Input.mousePosition.y > 0 && Input.mousePosition.y < Screen.height)
-        {
-            // Zoom with scroll wheel
-            float scroll = Input.GetAxis("Mouse ScrollWheel");
-            canvasScale += scroll * zoomSpeed;
-            canvasScale = Mathf.Clamp(canvasScale, 1f, 10f);
-        }
-        
-        // Pan with middle mouse button
-        if (Input.GetMouseButtonDown(2))
-        {
-            lastMousePosition = Input.mousePosition;
-        }
-
-        if (Input.GetMouseButton(2))
-        {
-            Vector3 delta = Input.mousePosition - lastMousePosition;
-            canvasPosition += delta;
-            lastMousePosition = Input.mousePosition;
-        }
-
-        // Update canvas transform
-        transform.localScale = Vector3.one * canvasScale;
-        transform.localPosition = canvasPosition;
     }
-
+    
     public void newDrawing(Texture2D texture)
     {
         colors = texture.GetPixels();
@@ -391,5 +404,22 @@ public class ImageEditor : MonoBehaviour
             hideObject.SetActive(true);
         }
         inputField.gameObject.SetActive(true);
+    }
+
+    private void setAllPixelsTransparent()
+    {
+        texture = new Texture2D((int)imageComponent.rectTransform.rect.width,
+            (int)imageComponent.rectTransform.rect.height);
+        colors = texture.GetPixels();
+        for (int i = 0; i < colors.Length; i++)
+        {
+            colors[i] = Color.black;
+            colors[i].a = 0;
+        }
+        
+        texture.SetPixels(colors);
+        texture.Apply();
+        imageComponent.sprite =
+            Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), Vector2.one * 0.5f);
     }
 }
