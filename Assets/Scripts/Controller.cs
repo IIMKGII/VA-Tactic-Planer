@@ -548,6 +548,14 @@ public class Controller : MonoBehaviour
             colorButton.transform.GetChild(0).GetComponent<Image>().color = currentColor;
         }
 
+        // foreach (var image in draggableImages)
+        // {
+        //     if (image.name != "Player" || currentColor.a != 0)
+        //     {
+        //         image.GetComponent<Button>().colors = colorBlock;
+        //     }
+        // }
+
         for (int i = 0; i < draggableImages.Length-1; i++)
         {
             if (currentColor.a != 0)
@@ -562,16 +570,6 @@ public class Controller : MonoBehaviour
         Process p = new Process();
         p.StartInfo.FileName = Application.dataPath + "/../VA Tactic Planer.exe";
         p.Start();
-    }
-
-    public Draggable[] getDraggables()
-    {
-        return draggables;
-    }
-
-    public void resetDraggableIndex()
-    {
-        draggableIndex = 0;
     }
     
     public void saveDraggableItemsToFile(int index)
